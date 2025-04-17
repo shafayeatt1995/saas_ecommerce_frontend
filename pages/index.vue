@@ -12,7 +12,6 @@ export default {
   name: "IndexPage",
   methods: {
     login() {
-      console.log("ami anik");
       eventBus.emit("loginModal");
     },
   },

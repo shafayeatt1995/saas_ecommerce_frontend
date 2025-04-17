@@ -5,18 +5,20 @@
         <DropdownMenuTrigger as-child>
           <SidebarMenuButton
             size="lg"
-            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
+            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <div
               class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
             >
-              <component :is="activeShop.logo" class="size-4" />
+              <StoreIcon class="size-4" />
             </div>
             <div class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-medium">
-                {{ activeShop.name }}
+                {{ activeStore?.name || "Select a store" }}
               </span>
-              <span class="truncate text-xs">{{ activeShop.plan }}</span>
+              <span class="truncate text-xs">{{
+                activeStore ? (activeStore.isExpired ? "Free" : "Paid") : "N/A"
+              }}</span>
             </div>
             <ChevronsUpDownIcon class="ml-auto" />
           </SidebarMenuButton>
@@ -28,30 +30,33 @@
           :side-offset="4"
         >
           <DropdownMenuLabel class="text-xs text-muted-foreground">
-            Shops
+            Stores
           </DropdownMenuLabel>
           <DropdownMenuItem
-            v-for="(shop, index) in shops"
-            :key="shop.name"
+            v-for="(store, index) in stores"
+            :key="store.name"
             class="gap-2 p-2 cursor-pointer"
-            @click="active = index"
+            @click="selectStore(store)"
           >
             <div
               class="flex size-6 items-center justify-center rounded-sm border"
             >
-              <component :is="shop.logo" class="size-3.5 shrink-0" />
+              <StoreIcon class="size-3.5 shrink-0" />
             </div>
-            {{ shop.name }}
+            {{ store.name }}
             <DropdownMenuShortcut>⌘{{ index + 1 }}</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem class="gap-2 p-2 cursor-pointer">
+          <DropdownMenuItem
+            class="gap-2 p-2 cursor-pointer"
+            @click="openStoreCreatorModal"
+          >
             <div
               class="flex size-6 items-center justify-center rounded-md border bg-transparent"
             >
               <PlusIcon class="size-4" />
             </div>
-            <div class="font-medium text-muted-foreground">Add shop</div>
+            <div class="font-medium text-muted-foreground">Add store</div>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -60,33 +65,18 @@
 </template>
 <script>
 import { useSidebar } from "@/components/ui/sidebar";
-import { ChevronsUpDownIcon, PlusIcon, Store } from "lucide-vue-next";
+import eventBus from "@/lib/eventBus";
+import { ChevronsUpDownIcon, PlusIcon, StoreIcon } from "lucide-vue-next";
 
 export default {
-  name: "ShopSwitcher",
+  name: "StoreSwitcher",
   components: {
     PlusIcon,
     ChevronsUpDownIcon,
+    StoreIcon,
   },
   data() {
     return {
-      shops: [
-        {
-          name: "Acme Inc",
-          logo: Store,
-          plan: "Enterprise",
-        },
-        {
-          name: "Acme Corp.",
-          logo: Store,
-          plan: "Startup",
-        },
-        {
-          name: "Evil Corp.",
-          logo: Store,
-          plan: "Free",
-        },
-      ],
       active: 0,
     };
   },
@@ -94,8 +84,20 @@ export default {
     isMobile() {
       return useSidebar().isMobile;
     },
-    activeShop() {
-      return this.shops[this.active];
+    activeStore() {
+      return useStore().selectStore;
+    },
+    stores() {
+      return useStore().stores.value;
+    },
+  },
+  methods: {
+    openStoreCreatorModal() {
+      eventBus.emit("openStoreCreatorModal");
+    },
+    selectStore({ _id }) {
+      const { setSelectStore } = useStore();
+      setSelectStore(_id);
     },
   },
 };

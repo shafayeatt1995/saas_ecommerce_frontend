@@ -10,7 +10,6 @@ export const useAuth = () => {
     try {
       const data = await api.post("/auth/login", user);
       setUser(data.user);
-      console.log(data);
       setCookie("sessionToken", data.token, { expires: 7 });
       return true;
     } catch (err) {

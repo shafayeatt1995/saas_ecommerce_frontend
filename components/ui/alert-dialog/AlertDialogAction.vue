@@ -1,10 +1,10 @@
 <script setup>
-import { cn } from "@/lib/utils";
-import { AvatarFallback } from "reka-ui";
-import { computed } from "vue";
+import { cn } from '@/lib/utils';
+import { buttonVariants } from '@/components/ui/button';
+import { AlertDialogAction } from 'reka-ui';
+import { computed } from 'vue';
 
 const props = defineProps({
-  delayMs: { type: Number, required: false },
   asChild: { type: Boolean, required: false },
   as: { type: null, required: false },
   class: { type: null, required: false },
@@ -18,16 +18,10 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-  <AvatarFallback
-    data-slot="avatar-fallback"
+  <AlertDialogAction
     v-bind="delegatedProps"
-    :class="
-      cn(
-        'bg-muted flex size-full items-center justify-center rounded-full',
-        props.class
-      )
-    "
+    :class="cn(buttonVariants(), props.class)"
   >
     <slot />
-  </AvatarFallback>
+  </AlertDialogAction>
 </template>

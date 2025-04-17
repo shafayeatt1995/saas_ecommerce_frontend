@@ -1,15 +1,17 @@
 <template>
   <SidebarMenu>
     <SidebarMenuItem>
-      <DropdownMenu>
+      <DropdownMenu v-if="user">
         <DropdownMenuTrigger as-child>
           <SidebarMenuButton
             size="lg"
-            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
+            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar class="h-8 w-8 rounded-lg">
               <AvatarImage :src="user.avatar" :alt="user.name" />
-              <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
+              <AvatarFallback class="rounded-lg">
+                {{ user.name[0] }}
+              </AvatarFallback>
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-medium">{{ user.name }}</span>
@@ -28,7 +30,9 @@
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
                 <AvatarImage :src="user.avatar" :alt="user.name" />
-                <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
+                <AvatarFallback class="rounded-lg">
+                  {{ user.name[0] }}
+                </AvatarFallback>
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
                 <span class="truncate font-semibold">{{ user.name }}</span>
@@ -38,32 +42,32 @@
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem class="cursor-pointer">
+            <DropdownMenuItem>
               <Sparkles />
               Upgrade to Pro
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem class="cursor-pointer">
+            <DropdownMenuItem>
               <BadgeCheck />
               Account
             </DropdownMenuItem>
-            <DropdownMenuItem class="cursor-pointer">
+            <DropdownMenuItem>
               <CreditCard />
               Billing
             </DropdownMenuItem>
-            <DropdownMenuItem class="cursor-pointer">
+            <DropdownMenuItem>
               <Bell />
               Notifications
             </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Headset />
+              Support
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
-            class="cursor-pointer"
-            variant="destructive"
-            @click="logout"
-          >
+          <DropdownMenuItem variant="destructive" @click="logout">
             <LogOut />
             Log out
           </DropdownMenuItem>
@@ -79,10 +83,11 @@ import {
   Bell,
   ChevronsUpDown,
   CreditCard,
+  Headset,
   LogOut,
   Sparkles,
 } from "lucide-vue-next";
-import { useSidebar } from "./ui/sidebar";
+import { useSidebar } from "../ui/sidebar";
 
 export default {
   name: "NavUser",
@@ -93,6 +98,7 @@ export default {
     CreditCard,
     LogOut,
     Sparkles,
+    Headset,
   },
   computed: {
     isMobile() {

@@ -119,7 +119,10 @@
   }
   body {
     font-family: "Red Hat Display", serif;
-    @apply bg-background text-foreground;
+    @apply bg-background text-gray-900;
+  }
+  button {
+    @apply cursor-pointer;
   }
   .fade-enter-active,
   .fade-leave-active {

@@ -1,4 +1,3 @@
-// @ts-check
 import withNuxt from "./.nuxt/eslint.config.mjs";
 
 export default withNuxt({
@@ -6,5 +5,9 @@ export default withNuxt({
     globals: {
       defineNuxtConfig: "readonly",
     },
+  },
+  rules: {
+    "vue/attribute-hyphenation": ["off"],
+    "vue/html-self-closing": ["off"],
   },
 });
