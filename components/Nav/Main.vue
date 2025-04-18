@@ -100,10 +100,10 @@
 import {
   ChevronRight,
   Settings2,
-  SquareTerminal,
   MoreHorizontal,
   LayoutDashboard,
   LayoutGrid,
+  Boxes,
 } from "lucide-vue-next";
 import { useSidebar } from "../ui/sidebar";
 export default {
@@ -126,15 +126,16 @@ export default {
           icon: LayoutGrid,
         },
         {
+          name: "Product",
+          url: "/dashboard/product",
+          icon: Boxes,
+        },
+        {
           title: "Playground",
           url: "#",
-          icon: SquareTerminal,
+          icon: Boxes,
           isActive: false,
           items: [
-            {
-              title: "History",
-              url: "#",
-            },
             {
               title: "Starred",
               url: "#",

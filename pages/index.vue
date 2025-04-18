@@ -3,6 +3,7 @@
     <h1>Home</h1>
     <NuxtLink to="/dashboard">Dashboard</NuxtLink>
     <Button @click="login">Login</Button>
+    <Paginate />
   </div>
 </template>
 

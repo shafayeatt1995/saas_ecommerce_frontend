@@ -30,6 +30,54 @@
             </div>
           </template>
         </TableResponsive>
+        <div v-if="!initLoading" class="flex justify-center items-center mt-5">
+          <!-- <Pagination
+            v-slot="{ page }"
+            :itemsPerPage="perPage"
+            :total="500"
+            :siblingCount="1"
+            :defaultPage="page"
+            showEdges
+          >
+            <PaginationList v-slot="{ items }" class="flex items-center gap-1">
+              <PaginationFirst
+                :disabled="+page === 1"
+                @click="paginateUrl(1)"
+              />
+              <PaginationPrev
+                :disabled="+page === 1"
+                @click="paginateUrl(+page - 1)"
+              />
+
+              <template v-for="(item, index) in items">
+                <PaginationListItem
+                  v-if="item.type === 'page'"
+                  :key="index"
+                  :value="item.value"
+                  as-child
+                >
+                  <Button
+                    class="size-10 p-0"
+                    :variant="item.value == page ? 'default' : 'outline'"
+                    @click="paginateUrl(item.value)"
+                  >
+                    {{ item.value }}
+                  </Button>
+                </PaginationListItem>
+                <PaginationEllipsis v-else :key="item.type" :index="index" />
+              </template>
+
+              <PaginationNext
+                :disabled="+page === total"
+                @click="paginateUrl(+page + 1)"
+              />
+              <PaginationLast
+                :disabled="+page === total"
+                @click="paginateUrl(total)"
+              />
+            </PaginationList>
+          </Pagination> -->
+        </div>
       </div>
     </div>
   </Dashboard>
@@ -63,7 +111,7 @@
       </div>
       <DialogFooter>
         <Button :disabled="loading" @click="submit">
-          <LoaderIcon v-if="loading" class="mr-2" />
+          <LoaderIcon v-if="loading" class="mr-2 animate-spin" />
           {{ editMode ? "Update" : "Create" }} category
         </Button>
       </DialogFooter>
@@ -96,7 +144,7 @@ export default {
     return {
       loading: false,
       open: false,
-      initLoading: false,
+      initLoading: true,
       imageModal: false,
       editMode: false,
       form: {
@@ -104,7 +152,9 @@ export default {
         image: "",
       },
       items: [],
+      total: 0,
       error: {},
+      perPage: 4,
     };
   },
   computed: {
@@ -117,6 +167,9 @@ export default {
         { key: "image", label: "IMAGE", span: "minmax(100PX, 1fr)" },
         { key: "actions", label: "Actions", span: "minmax(100PX, 1fr)" },
       ];
+    },
+    page() {
+      return this.$route.query.page || 1;
     },
   },
   watch: {
@@ -131,6 +184,9 @@ export default {
         this.imageModal = false;
       }
     },
+    page() {
+      this.fetchItems();
+    },
   },
   mounted() {
     this.fetchItems();
@@ -142,10 +198,13 @@ export default {
       this.initLoading = true;
       try {
         const { api } = useApi();
-        const { items } = await api.get("/dashboard/category", {
+        const { items, total } = await api.get("/dashboard/category", {
           storeID: this.storeID,
+          page: this.page,
+          perPage: this.perPage,
         });
         this.items = items;
+        this.total = total;
       } catch (error) {
         console.error(error);
         this.error = error.response.data;
@@ -197,6 +256,12 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    paginateUrl(page = 1) {
+      this.$router.push({
+        name: "dashboard-category",
+        query: { page },
+      });
     },
   },
 };
