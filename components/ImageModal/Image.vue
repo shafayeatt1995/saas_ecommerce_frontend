@@ -1,96 +1,107 @@
 <template>
-  <form class="flex items-center gap-2" @submit.prevent="fetchSearchImages">
-    <Input id="Search" placeholder="Search" v-model="search" class="flex-1" />
-    <Button size="icon" type="submit"><SearchIcon /></Button>
-  </form>
-  <div class="max-h-[500px] overflow-y-auto mt-2">
-    <div class="border rounded-lg p-2">
-      <div v-if="imageLoading" class="flex justify-center items-center h-36">
-        <LoaderIcon class="animate-spin" :size="60" />
-      </div>
-      <p
-        class="text-center py-16 text-2xl font-bold text-black"
-        v-else-if="images.length === 0"
-      >
-        No images found
-      </p>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-        <div
-          v-for="(image, i) in imgs"
-          :key="i"
-          class="relative border rounded-md p-2"
+  <div>
+    <form class="flex items-center gap-2" @submit.prevent="fetchSearchImages">
+      <Input id="Search" v-model="search" placeholder="Search" class="flex-1" />
+      <Button size="icon" type="submit"><SearchIcon /></Button>
+    </form>
+    <div class="max-h-[400px] overflow-y-auto mt-2">
+      <div class="border rounded-lg p-2">
+        <div v-if="imageLoading" class="flex justify-center items-center h-36">
+          <LoaderIcon class="animate-spin" :size="60" />
+        </div>
+        <p
+          v-else-if="images.length === 0"
+          class="text-center py-16 text-2xl font-bold text-black"
         >
-          <button
-            class="relative w-full h-28 rounded-lg overflow-hidden"
-            @click="selectImage(i)"
+          No images found
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <div
+            v-for="(image, i) in imgs"
+            :key="i"
+            class="relative border rounded-md p-2"
           >
-            <div
-              class="absolute top-0 left-0 w-full h-full bg-black/70 text-white font-bold flex items-center justify-center text-2xl"
-              v-if="checkSelectImage(image.url)"
+            <button
+              class="relative w-full h-28 rounded-lg overflow-hidden"
+              @click="selectImage(i)"
             >
-              <!-- <CheckCircleIcon :size="30" /> -->
-              {{ getSn(i) }}
-            </div>
+              <div
+                v-if="checkSelectImage(image.url)"
+                class="absolute top-0 left-0 w-full h-full bg-black/70 text-white font-bold flex items-center justify-center text-2xl"
+              >
+                <span v-if="multiSelect">
+                  {{ getSn(i) }}
+                </span>
+                <span v-else class="text-green-500">
+                  <CheckCircleIcon :size="30" />
+                </span>
+              </div>
 
-            <img :src="image.url" class="size-full object-contain" />
-          </button>
-          <EditMode
-            v-model="imgs[i].name"
-            tag="p"
-            textClass="truncate"
-            class="mt-1 text-center"
-            @save="saveImageName(i)"
-          />
+              <img :src="image.url" class="size-full object-contain" />
+            </button>
+            <EditMode
+              v-model="imgs[i].name"
+              tag="p"
+              textClass="truncate"
+              class="mt-1 text-center"
+              @save="saveImageName(i)"
+            />
+            <p class="text-center">({{ showSize(image.size) }})</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <Pagination
-    v-slot="{ page }"
-    :items-per-page="perPage"
-    :total="total"
-    :sibling-count="1"
-    show-edges
-    :default-page="page"
-    v-if="images && images.length > 0"
-  >
-    <PaginationList
-      v-slot="{ items }"
-      class="flex items-center justify-center gap-1 mt-2"
+    <div
+      v-if="images && images.length > 0"
+      class="flex justify-between items-center mt-2"
     >
-      <PaginationFirst @click="loadPage(1)" />
-      <PaginationPrev @click="loadPage(page - 1)" />
-
-      <template v-for="(item, index) in items">
-        <PaginationListItem
-          v-if="item.type === 'page'"
-          :key="index"
-          :value="item.value"
-          as-child
+      <Pagination
+        v-slot="{ page }"
+        :itemsPerPage="perPage"
+        :total="total"
+        :siblingCount="1"
+        showEdges
+        :defaultPage="1"
+      >
+        <PaginationList
+          v-slot="{ items }"
+          class="flex items-center justify-center gap-1 mt-2"
         >
-          <Button
-            class="w-9 h-9 p-0"
-            :variant="item.value === page ? 'default' : 'outline'"
-            @click="loadPage(item.value)"
-          >
-            {{ item.value }}
-          </Button>
-        </PaginationListItem>
-        <PaginationEllipsis v-else :key="item.type" :index="index" />
-      </template>
+          <PaginationFirst @click="loadPage(1)" />
+          <PaginationPrev @click="loadPage(page - 1)" />
+          <template v-for="(item, index) in items">
+            <PaginationListItem
+              v-if="item.type === 'page'"
+              :key="index"
+              :value="item.value"
+              as-child
+            >
+              <Button
+                class="w-9 h-9 p-0"
+                :variant="item.value === page ? 'default' : 'outline'"
+                @click="loadPage(item.value)"
+              >
+                {{ item.value }}
+              </Button>
+            </PaginationListItem>
+            <PaginationEllipsis v-else :key="item.type" :index="index" />
+          </template>
 
-      <PaginationNext @click="loadPage(page + 1)" />
-      <PaginationLast @click="loadPage(Math.ceil(total / perPage))" />
-    </PaginationList>
-  </Pagination>
+          <PaginationNext @click="loadPage(page + 1)" />
+          <PaginationLast @click="loadPage(Math.ceil(total / perPage))" />
+        </PaginationList>
+      </Pagination>
+      <Button @click="clearSelect"><RefreshCwIcon /> Clear Select</Button>
+    </div>
+  </div>
 </template>
 
 <script>
 import eventBus from "@/lib/eventBus";
 import {
   CheckCircleIcon,
-  FullscreenIcon,
   LoaderIcon,
+  RefreshCwIcon,
   SearchIcon,
 } from "lucide-vue-next";
 import { toast } from "vue-sonner";
@@ -100,8 +111,8 @@ export default {
   components: {
     SearchIcon,
     LoaderIcon,
+    RefreshCwIcon,
     CheckCircleIcon,
-    FullscreenIcon,
   },
   props: {
     multiSelect: Boolean,
@@ -142,10 +153,6 @@ export default {
       const { perPage } = useImg();
       return perPage.value;
     },
-    page() {
-      const { page } = useImg();
-      return page.value;
-    },
     imageLoading() {
       const { imageLoading } = useImg();
       return imageLoading.value;
@@ -163,6 +170,18 @@ export default {
       return (i) => {
         const { url } = this.imgs[i];
         return this.selectImages.indexOf(url) + 1;
+      };
+    },
+    showSize() {
+      return (size) => {
+        const kb = size / 1024;
+        if (kb < 1) {
+          return `${size} bytes`;
+        }
+        if (kb < 1024) {
+          return `${kb.toFixed(0)} KB`;
+        }
+        return `${(kb / 1024).toFixed(1)} MB`;
       };
     },
   },
@@ -231,6 +250,9 @@ export default {
     loadPage(page) {
       const { loadPage } = useImg();
       loadPage(page);
+    },
+    clearSelect() {
+      this.selectImages = this.multiSelect ? [] : "";
     },
   },
 };

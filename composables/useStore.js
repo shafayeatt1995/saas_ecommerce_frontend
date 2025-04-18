@@ -50,10 +50,21 @@ export default function () {
     } else {
       if (select.value) return;
       const { getCookie } = useUtils();
-      select.value = getCookie("selectStore") || stores.value[0]?._id || null;
+      const getSelectStore = getCookie("selectStore");
+      if (getSelectStore) {
+        const findStore = stores.value.some((s) => s._id === getSelectStore);
+        if (findStore) {
+          select.value = getSelectStore;
+        } else {
+          select.value = stores.value[0]?._id || null;
+        }
+      } else {
+        select.value = stores.value[0]?._id || null;
+      }
     }
   };
   const selectStore = stores.value.find((s) => s._id === select.value) || null;
+  const storeID = selectStore?._id || null;
   return {
     fetchStores,
     createStore,
@@ -62,5 +73,6 @@ export default function () {
     selectStore,
     setSelectStore,
     select,
+    storeID,
   };
 }

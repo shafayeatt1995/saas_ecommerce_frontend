@@ -9,5 +9,9 @@ export default withNuxt({
   rules: {
     "vue/attribute-hyphenation": ["off"],
     "vue/html-self-closing": ["off"],
+    "vue/no-multiple-template-root": ["off"],
+    "vue/require-explicit-emits": ["off"],
+    "vue/no-template-shadow": ["off"],
+    "vue/require-default-prop": ["off"],
   },
 });

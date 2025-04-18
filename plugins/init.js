@@ -1,6 +1,3 @@
-import { useAuth } from "@/composables/useAuth";
-import useStore from "@/composables/useStore";
-
 export default defineNuxtPlugin(async () => {
   const { fetchUser, authUser } = useAuth();
   const val = await fetchUser();

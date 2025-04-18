@@ -1,8 +1,8 @@
 <script setup>
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { ChevronsRight } from 'lucide-vue-next';
-import { PaginationLast } from 'reka-ui';
+import { ChevronLeft } from 'lucide-vue-next';
+import { PaginationPrev } from 'reka-ui';
 import { computed } from 'vue';
 
 const props = defineProps({
@@ -19,11 +19,11 @@ const delegatedProps = computed(() => {
 </script>
 
 <template>
-  <PaginationLast v-bind="delegatedProps">
+  <PaginationPrev v-bind="delegatedProps">
     <Button :class="cn('w-10 h-10 p-0', props.class)" variant="outline">
       <slot>
-        <ChevronsRight class="h-4 w-4" />
+        <ChevronLeft class="h-4 w-4" />
       </slot>
     </Button>
-  </PaginationLast>
+  </PaginationPrev>
 </template>

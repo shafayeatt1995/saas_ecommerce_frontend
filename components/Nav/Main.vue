@@ -2,14 +2,59 @@
   <SidebarGroup class="group-data-[collapsible=icon]:hidden">
     <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
     <SidebarMenu>
-      <SidebarMenuItem v-for="item in items" :key="item.name">
-        <SidebarMenuButton as-child>
-          <NuxtLink :to="item.url">
-            <component :is="item.icon" v-if="item.icon" />
-            <span>{{ item.name }}</span>
-          </NuxtLink>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
+      <template v-for="(item, i) in items" :key="i">
+        <Collapsible
+          v-if="item.title"
+          as-child
+          :default-open="item.isActive"
+          class="group/collapsible"
+        >
+          <SidebarMenuItem>
+            <CollapsibleTrigger as-child>
+              <SidebarMenuButton :tooltip="item.title">
+                <component :is="item.icon" v-if="item.icon" />
+                <span>{{ item.title }}</span>
+                <ChevronRight
+                  class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+                />
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SidebarMenuSub>
+                <SidebarMenuSubItem
+                  v-for="subItem in item.items"
+                  :key="subItem.title"
+                >
+                  <SidebarMenuSubButton as-child>
+                    <a :href="subItem.url">
+                      <span>{{ subItem.title }}</span>
+                    </a>
+                  </SidebarMenuSubButton>
+                </SidebarMenuSubItem>
+              </SidebarMenuSub>
+            </CollapsibleContent>
+          </SidebarMenuItem>
+        </Collapsible>
+        <SidebarMenuItem v-else>
+          <SidebarMenuButton
+            as-child
+            :class="
+              i === 0
+                ? currentUrl === item.url
+                  ? 'bg-gray-800 text-white hover:bg-gray-800 hover:text-white'
+                  : ''
+                : currentUrl.startsWith(item.url)
+                ? 'bg-gray-800 text-white hover:bg-gray-800 hover:text-white'
+                : ''
+            "
+          >
+            <NuxtLink :to="item.url">
+              <component :is="item.icon" v-if="item.icon" />
+              <span>{{ item.name }}</span>
+            </NuxtLink>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </template>
     </SidebarMenu>
   </SidebarGroup>
   <SidebarGroup>
@@ -56,9 +101,6 @@ import {
   ChevronRight,
   Settings2,
   SquareTerminal,
-  Trash2,
-  Forward,
-  Folder,
   MoreHorizontal,
   LayoutDashboard,
   LayoutGrid,
@@ -68,9 +110,6 @@ export default {
   name: "NavMain",
   components: {
     ChevronRight,
-    Trash2,
-    Forward,
-    Folder,
     MoreHorizontal,
   },
   data() {
@@ -86,8 +125,6 @@ export default {
           url: "/dashboard/category",
           icon: LayoutGrid,
         },
-      ],
-      navMain: [
         {
           title: "Playground",
           url: "#",
@@ -108,6 +145,8 @@ export default {
             },
           ],
         },
+      ],
+      navMain: [
         {
           title: "Settings",
           url: "#",
@@ -137,6 +176,9 @@ export default {
   computed: {
     isMobile() {
       return useSidebar().isMobile;
+    },
+    currentUrl() {
+      return this.$route.path;
     },
   },
 };

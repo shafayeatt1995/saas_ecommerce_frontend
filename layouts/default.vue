@@ -2,6 +2,7 @@
   <div>
     <slot />
     <SocialLogin />
+    <Toaster position="bottom-center" :expand="false" closeButton richColors />
   </div>
   <!-- 
   <Toaster position="bottom-center" :expand="false" closeButton richColors />

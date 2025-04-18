@@ -1,7 +1,7 @@
 export default function () {
   const { api } = useApi();
   const page = useState("page", () => 1);
-  const perPage = useState("perPage", () => 20);
+  const perPage = useState("perPage", () => 24);
   const blocked = useState("blocked", () => false);
   const images = useState("images", () => []);
   const total = useState("total", () => 0);
@@ -18,6 +18,7 @@ export default function () {
         page: page.value,
         perPage: perPage.value,
         search: search.value,
+        storeID: useStore()?.selectStore?._id,
       });
       images.value = items;
       total.value = totalImages;
@@ -31,7 +32,11 @@ export default function () {
   const deleteImages = async (keyList) => {
     try {
       deleteLoading.value = true;
-      await api.post2("/user/image/delete", { keyList });
+      const { selectStore } = useStore();
+      await api.post2("/user/image/delete", {
+        keyList,
+        storeID: selectStore?._id,
+      });
       resetImages();
     } catch (error) {
       console.error(error);

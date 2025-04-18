@@ -1,13 +1,13 @@
 <template>
-  <Dialog :open="modal">
-    <DialogContent class="max-w-4xl p-2 md:p-6 rounded-xl" hideClose>
+  <Dialog :open="open">
+    <DialogContent class="max-w-4xl p-2 md:p-5 rounded-xl" hideClose>
       <DialogHeader>
         <DialogTitle class="flex justify-between items-center">
           <p>Images</p>
           <Button
             variant="destructiveOutline"
-            @click="$emit('close')"
             size="icon"
+            @click="open = false"
           >
             <XIcon />
           </Button>
@@ -30,8 +30,8 @@
           <div>
             <ImageModalImage
               v-if="activeTab === 'Select images'"
-              :multiSelect="multiSelect"
               v-model="selectImages"
+              :multiSelect="multiSelect"
             />
             <ImageModalUpload v-else-if="activeTab === 'Upload image'" />
             <ImageModalDelete v-else-if="activeTab === 'Delete image'" />
@@ -49,10 +49,7 @@ import { XIcon } from "lucide-vue-next";
 export default {
   name: "ImageModal",
   components: { XIcon },
-  props: {
-    modal: Boolean,
-    multiSelect: Boolean,
-  },
+  props: { multiSelect: Boolean },
   data() {
     return {
       tabs: ["Select images", "Upload image", "Delete image"],
@@ -68,9 +65,17 @@ export default {
         this.$emit("update:modelValue", val);
       },
     },
+    open: {
+      get() {
+        return this.$attrs.open;
+      },
+      set(val) {
+        this.$emit("update:open", val);
+      },
+    },
   },
   watch: {
-    modal(val) {
+    open(val) {
       if (!val) {
         this.activeTab = "Select images";
       }

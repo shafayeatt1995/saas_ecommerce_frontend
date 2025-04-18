@@ -1,4 +1,7 @@
 <template>
+  <Head>
+    <Title>Dashboard</Title>
+  </Head>
   <Dashboard>
     Ami anik
     {{ stores }}
