@@ -13,5 +13,6 @@ export default withNuxt({
     "vue/require-explicit-emits": ["off"],
     "vue/no-template-shadow": ["off"],
     "vue/require-default-prop": ["off"],
+    "vue/no-v-html": ["off"],
   },
 });

@@ -14,9 +14,21 @@
           :items="initLoading ? 10 : items"
           :skeleton="initLoading"
         >
+          <template #empty>
+            <div class="w-full flex flex-col justify-center items-center py-10">
+              <InboxIcon :size="100" />
+              <p class="text-2xl font-bold">No categories found</p>
+            </div>
+          </template>
           <template #image="{ value }">
-            <div class="flex justify-end md:justify-start items-center">
+            <div
+              v-if="value"
+              class="flex justify-end md:justify-start items-center"
+            >
               <img :src="value" class="w-full h-20 object-contain rounded-lg" />
+            </div>
+            <div v-else>
+              <ImageIcon :size="100" />
             </div>
           </template>
           <template #actions="{ item }">
@@ -30,24 +42,24 @@
             </div>
           </template>
         </TableResponsive>
-        <div v-if="!initLoading" class="flex justify-center items-center mt-5">
-          <!-- <Pagination
+        <div
+          v-if="!initLoading && items.length > 0"
+          class="flex justify-center items-center mt-5"
+        >
+          <Pagination
             v-slot="{ page }"
-            :itemsPerPage="perPage"
-            :total="500"
-            :siblingCount="1"
-            :defaultPage="page"
-            showEdges
+            :items-per-page="perPage"
+            :total="total"
+            :sibling-count="1"
+            show-edges
+            :default-page="+page"
           >
-            <PaginationList v-slot="{ items }" class="flex items-center gap-1">
-              <PaginationFirst
-                :disabled="+page === 1"
-                @click="paginateUrl(1)"
-              />
-              <PaginationPrev
-                :disabled="+page === 1"
-                @click="paginateUrl(+page - 1)"
-              />
+            <PaginationList
+              v-slot="{ items }"
+              class="flex items-center justify-center gap-1 mt-2"
+            >
+              <PaginationFirst @click="paginateUrl(1)" />
+              <PaginationPrev @click="paginateUrl(+page - 1)" />
 
               <template v-for="(item, index) in items">
                 <PaginationListItem
@@ -57,7 +69,7 @@
                   as-child
                 >
                   <Button
-                    class="size-10 p-0"
+                    class="w-9 h-9 p-0"
                     :variant="item.value == page ? 'default' : 'outline'"
                     @click="paginateUrl(item.value)"
                   >
@@ -67,16 +79,12 @@
                 <PaginationEllipsis v-else :key="item.type" :index="index" />
               </template>
 
-              <PaginationNext
-                :disabled="+page === total"
-                @click="paginateUrl(+page + 1)"
-              />
+              <PaginationNext @click="paginateUrl(+page + 1)" />
               <PaginationLast
-                :disabled="+page === total"
-                @click="paginateUrl(total)"
+                @click="paginateUrl(items[items.length - 1].value)"
               />
             </PaginationList>
-          </Pagination> -->
+          </Pagination>
         </div>
       </div>
     </div>
@@ -125,6 +133,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   ImageIcon,
+  InboxIcon,
   LoaderIcon,
   PencilIcon,
   PlusIcon,
@@ -139,6 +148,7 @@ export default {
     PencilIcon,
     Trash2Icon,
     LoaderIcon,
+    InboxIcon,
   },
   data() {
     return {
@@ -154,13 +164,10 @@ export default {
       items: [],
       total: 0,
       error: {},
-      perPage: 4,
+      perPage: 20,
     };
   },
   computed: {
-    storeID() {
-      return useStore().storeID;
-    },
     fields() {
       return [
         { key: "name", label: "NAME", span: "minmax(100PX, 1fr)" },
@@ -170,6 +177,9 @@ export default {
     },
     page() {
       return this.$route.query.page || 1;
+    },
+    storeID() {
+      return useStore().storeID;
     },
   },
   watch: {
@@ -187,9 +197,17 @@ export default {
     page() {
       this.fetchItems();
     },
+    storeID() {
+      if (this.page == 1) {
+        this.fetchItems();
+      } else {
+        this.paginateUrl(1);
+      }
+    },
   },
   mounted() {
     this.fetchItems();
+    this.trigger();
   },
   methods: {
     cn,
@@ -199,7 +217,6 @@ export default {
       try {
         const { api } = useApi();
         const { items, total } = await api.get("/dashboard/category", {
-          storeID: this.storeID,
           page: this.page,
           perPage: this.perPage,
         });
@@ -207,7 +224,6 @@ export default {
         this.total = total;
       } catch (error) {
         console.error(error);
-        this.error = error.response.data;
       } finally {
         this.initLoading = false;
       }
@@ -216,14 +232,10 @@ export default {
       this.loading = true;
       try {
         const { api } = useApi();
-        const body = {
-          ...this.form,
-          storeID: this.storeID,
-        };
         if (this.editMode) {
-          await api.put("/dashboard/category", body);
+          await api.put("/dashboard/category", this.form);
         } else {
-          await api.post("/dashboard/category", body);
+          await api.post("/dashboard/category", this.form);
         }
         this.fetchItems();
         this.open = false;
@@ -247,7 +259,6 @@ export default {
         this.loading = true;
         const { api } = useApi();
         await api.delete("/dashboard/category", {
-          storeID: this.storeID,
           _id: item._id,
         });
         this.fetchItems();
@@ -262,6 +273,14 @@ export default {
         name: "dashboard-category",
         query: { page },
       });
+    },
+    async trigger() {
+      try {
+        const { api } = useApi();
+        await api.get2("/");
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 };

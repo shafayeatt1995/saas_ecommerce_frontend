@@ -27,9 +27,9 @@
             >
               <div
                 v-if="checkSelectImage(image.url)"
-                class="absolute top-0 left-0 w-full h-full bg-black/70 text-white font-bold flex items-center justify-center text-2xl"
+                class="absolute top-0 left-0 w-full h-full bg-black/70 text-white font-bold flex justify-center items-center text-2xl"
               >
-                <span v-if="multiSelect">
+                <span v-if="multiSelect" class="mr-3 mt-1">
                   {{ getSn(i) }}
                 </span>
                 <span v-else class="text-green-500">
@@ -88,7 +88,7 @@
           </template>
 
           <PaginationNext @click="loadPage(page + 1)" />
-          <PaginationLast @click="loadPage(Math.ceil(total / perPage))" />
+          <PaginationLast @click="loadPage(items[items.length - 1].value)" />
         </PaginationList>
       </Pagination>
       <Button @click="clearSelect"><RefreshCwIcon /> Clear Select</Button>

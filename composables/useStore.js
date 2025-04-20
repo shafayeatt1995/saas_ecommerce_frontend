@@ -28,7 +28,7 @@ export default function () {
           stores.value.find((s) => s._id === store._id)?._id ||
           stores.value[0]?._id ||
           null;
-        setCookie("selectStore", select.value, {
+        setCookie("storeID", select.value, {
           expires: 30,
           path: "/",
         });
@@ -43,14 +43,14 @@ export default function () {
     if (val) {
       select.value = val;
       const { setCookie } = useUtils();
-      setCookie("selectStore", select.value, {
+      setCookie("storeID", select.value, {
         expires: 30,
         path: "/",
       });
     } else {
       if (select.value) return;
       const { getCookie } = useUtils();
-      const getSelectStore = getCookie("selectStore");
+      const getSelectStore = getCookie("storeID");
       if (getSelectStore) {
         const findStore = stores.value.some((s) => s._id === getSelectStore);
         if (findStore) {

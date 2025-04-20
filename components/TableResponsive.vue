@@ -103,7 +103,10 @@
       </div>
     </div>
     <div class="rounded-lg overflow-hidden">
-      <slot name="empty" />
+      <slot
+        v-if="items && typeof items === 'object' && items.length === 0"
+        name="empty"
+      />
     </div>
   </div>
 </template>

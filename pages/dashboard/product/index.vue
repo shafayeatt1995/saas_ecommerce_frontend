@@ -1,10 +1,13 @@
 <template>
-  <Admin>
+  <Head>
+    <title>Product</title>
+  </Head>
+  <Dashboard>
     <div class="bg-white shadow-md rounded-xl py-4 md:px-4 px-2">
       <div class="flex justify-between items-center mb-5">
         <h1 class="text-lg lg:text-3xl font-bold">Product</h1>
         <NuxtLink
-          to="/admin/product/create-update"
+          to="/dashboard/product/create-update"
           :class="cn(buttonVariants({ variant: 'default' }))"
           ><PlusIcon /> Add Product</NuxtLink
         >
@@ -14,33 +17,38 @@
         :items="initLoading ? 10 : items"
         :skeleton="initLoading"
       >
-        <template #images="{ value }">
-          <img :src="value[0]" class="w-full max-h-20 object-contain" />
+        <template #empty>
+          <div class="w-full flex flex-col justify-center items-center py-10">
+            <InboxIcon :size="100" />
+            <p class="text-2xl font-bold">No products found</p>
+          </div>
         </template>
-        <template #category="{ value, item }">
-          {{ value.name }} -> {{ item?.subCategory?.name }}
+        <template #thumbnail="{ value }">
+          <img :src="value" class="w-full max-h-20 object-contain" />
+        </template>
+        <template #category="{ value }">
+          <p v-if="value?.name">{{ value.name }}</p>
+          <p v-else>N/A</p>
         </template>
         <template #price="{ item }">
           <div>
-            <p>Dealing Price: {{ item.dealingPrice }}</p>
-            <p>Commission: {{ item.commission }}</p>
-            <p v-if="item.discountStatus && item.discount > 0">
-              Discount: {{ item.discount }}
-            </p>
             <p>
               Price:
-              <span v-if="item.discountStatus && item.discount > 0"
+              <span v-if="item.discountStatus && item.discountPrice > 0"
                 ><del>{{ item.price }}</del>
-                {{ item.price - item.discount }}</span
+                {{ item.price - item.discountPrice }}</span
               >
               <span v-else>{{ item.price }}</span>
+            </p>
+            <p v-if="item.discountStatus && item.discountPrice > 0">
+              Discount: {{ item.discountPrice }}
             </p>
           </div>
         </template>
         <template #actions="{ item, index }">
           <div class="flex items-center justify-center gap-2">
             <NuxtLink
-              :to="`/admin/product/create-update?id=${item._id}`"
+              :to="`/dashboard/product/create-update?id=${item._id}`"
               :class="cn(buttonVariants({ variant: 'default' }))"
               >Edit</NuxtLink
             >
@@ -50,18 +58,24 @@
           </div>
         </template>
       </TableResponsive>
-      <div class="flex justify-center items-center mt-5">
+      <div
+        v-if="!initLoading && items.length > 0"
+        class="flex justify-center items-center mt-5"
+      >
         <Pagination
           v-slot="{ page }"
           :items-per-page="perPage"
           :total="total"
           :sibling-count="1"
           show-edges
-          :default-page="page"
+          :default-page="+page"
         >
-          <PaginationList v-slot="{ items }" class="flex items-center gap-1">
-            <PaginationFirst />
-            <PaginationPrev />
+          <PaginationList
+            v-slot="{ items }"
+            class="flex items-center justify-center gap-1 mt-2"
+          >
+            <PaginationFirst @click="paginateUrl(1)" />
+            <PaginationPrev @click="paginateUrl(+page - 1)" />
 
             <template v-for="(item, index) in items">
               <PaginationListItem
@@ -70,50 +84,46 @@
                 :value="item.value"
                 as-child
               >
-                <NuxtLink
+                <Button
                   class="w-9 h-9 p-0"
-                  :class="
-                    cn(
-                      buttonVariants({
-                        variant: item.value == page ? 'default' : 'outline',
-                      })
-                    )
-                  "
-                  :to="{ name: 'admin-category', query: { page: item.value } }"
+                  :variant="item.value == page ? 'default' : 'outline'"
+                  @click="paginateUrl(item.value)"
                 >
                   {{ item.value }}
-                </NuxtLink>
+                </Button>
               </PaginationListItem>
               <PaginationEllipsis v-else :key="item.type" :index="index" />
             </template>
 
-            <PaginationNext />
-            <PaginationLast />
+            <PaginationNext @click="paginateUrl(+page + 1)" />
+            <PaginationLast
+              @click="paginateUrl(items[items.length - 1].value)"
+            />
           </PaginationList>
         </Pagination>
       </div>
     </div>
-  </Admin>
+  </Dashboard>
 </template>
 
 <script>
 import { buttonVariants } from "@/components/ui/button";
 import { useApi } from "@/composables/useApi";
 import { cn } from "@/lib/utils";
-import { LoaderCircleIcon, PlusIcon } from "lucide-vue-next";
+import { InboxIcon, PlusIcon } from "lucide-vue-next";
 
 export default {
   name: "Store",
   components: {
     PlusIcon,
-    LoaderCircleIcon,
+    InboxIcon,
   },
   data() {
     return {
       items: [],
       total: 0,
       blocked: false,
-      initLoading: false,
+      initLoading: true,
       perPage: 20,
     };
   },
@@ -123,17 +133,27 @@ export default {
     },
     fields() {
       return [
-        { key: "images", label: "IMAGE", span: "minmax(100px, 1fr)" },
+        { key: "thumbnail", label: "THUMBNAIL", span: "minmax(100px, 1fr)" },
         { key: "name", label: "NAME", span: "minmax(200px, 1fr)" },
         { key: "category", label: "CATEGORY", span: "minmax(200px, 1fr)" },
         { key: "price", label: "Price", span: "minmax(200px, 1fr)" },
         { key: "actions", label: "Actions", span: "minmax(100px, 1fr)" },
       ];
     },
+    storeID() {
+      return useStore().storeID;
+    },
   },
   watch: {
     page() {
       this.fetchItems();
+    },
+    storeID() {
+      if (this.page == 1) {
+        this.fetchItems();
+      } else {
+        this.paginateUrl(1);
+      }
     },
   },
   mounted() {
@@ -146,7 +166,7 @@ export default {
       try {
         this.initLoading = true;
         const { api } = useApi();
-        const { items, total } = await api.get("/admin/product", {
+        const { items, total } = await api.get("/dashboard/product", {
           page: this.page,
           perPage: this.perPage,
         });
@@ -164,13 +184,21 @@ export default {
         if (!confirm("Are you sure you want to delete this product?")) return;
         this.blocked = true;
         const { api } = useApi();
-        await api.delete(`/admin/product`, this.items[i]);
+        await api.delete(`/dashboard/product`, {
+          id: this.items[i]._id,
+        });
         this.fetchItems();
       } catch (e) {
         console.error(e);
       } finally {
         this.blocked = false;
       }
+    },
+    paginateUrl(page = 1) {
+      this.$router.push({
+        name: "dashboard-product",
+        query: { page },
+      });
     },
   },
 };

@@ -1,12 +1,10 @@
 <template>
   <div>
     <slot />
-    <SocialLogin />
-    <Toaster position="bottom-center" :expand="false" closeButton richColors />
   </div>
-  <!-- 
+  <SocialLogin />
   <Toaster position="bottom-center" :expand="false" closeButton richColors />
-  <ImagePreview /> -->
+  <ImagePreview />
 </template>
 <script>
 export default {

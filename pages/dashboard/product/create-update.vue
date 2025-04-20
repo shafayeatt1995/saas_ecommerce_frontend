@@ -1,95 +1,101 @@
 <template>
-  <Admin>
+  <Head>
+    <title>Product create & update</title>
+  </Head>
+  <Dashboard>
     <h1 class="text-lg lg:text-3xl font-bold">
       {{ editMode ? "Update" : "Create" }} Product
     </h1>
-    <div class="grid grid-cols-1 lg:grid-cols-3 mb-5 w-full gap-5">
+    <div class="grid grid-cols-1 lg:grid-cols-3 my-3 w-full gap-5">
       <div class="col-span-2 space-y-5">
         <div class="bg-white p-4 shadow-md rounded-xl space-y-2 border">
           <h2 class="text-2xl font-bold mb-2">Product basic info</h2>
-          <div>
-            <Label for="name">Product name</Label>
-            <Input
-              id="name"
-              type="text"
-              v-model="form.name"
-              placeholder="Enter product name"
-            />
-            <ErrorMessage name="name" :error="error" />
-          </div>
-          <div>
-            <p class="font-bold">
-              Product price: {{ form.dealingPrice }} + {{ form.commission }} =
-              <span v-if="form.discountStatus && form.discount > 0">
-                <del>{{ form.price }}</del> {{ form.price - form.discount }}
-              </span>
-              <span v-else>{{ form.price }}</span>
-            </p>
-            <div class="flex items-start gap-2">
-              <div class="flex-1">
-                <Label for="price">Product dealing price</Label>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <Label for="name">Product name</Label>
+              <Input
+                id="name"
+                v-model="form.name"
+                type="text"
+                placeholder="Enter product name"
+              />
+              <ErrorMessage name="name" :error="error" />
+            </div>
+            <div>
+              <p class="font-bold pb-2">
+                Product price:
+                <span v-if="form.discountStatus && form.discountPrice > 0">
+                  <del>{{ form.price }}</del>
+                  {{ form.price - form.discountPrice }}
+                </span>
+                <span v-else>{{ form.price }}</span>
+              </p>
+              <div class="space-y-2">
+                <Label for="price">Product price</Label>
                 <Input
                   id="price"
+                  v-model="form.price"
                   type="number"
-                  v-model="form.dealingPrice"
                   placeholder="Enter product dealing price"
                 />
-                <ErrorMessage name="dealingPrice" :error="error" />
-              </div>
-              <div class="flex-1">
-                <Label for="price">Product commission</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  v-model="form.commission"
-                  placeholder="Enter product commission"
-                />
-                <ErrorMessage name="commission" :error="error" />
+                <ErrorMessage name="price" :error="error" />
               </div>
             </div>
-          </div>
-          <div>
-            <Label for="price">Product discount</Label>
-            <Select v-model="form.discountStatus">
-              <SelectTrigger class="flex-1">
-                <SelectValue placeholder="Product discount status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Select Product Discount</SelectLabel>
-                  <SelectItem :value="true"> Yes </SelectItem>
-                  <SelectItem :value="false"> No </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <SlideUpDown
-              :duration="300"
-              :active="form.discountStatus"
-              class="mt-2"
-            >
-              <Input
-                id="discount"
-                type="number"
-                v-model="form.discount"
-                placeholder="Enter product discount amount"
-                class="pt-2"
-              />
-            </SlideUpDown>
 
-            <ErrorMessage name="discount" :error="error" />
-          </div>
-          <div>
-            <Label for="description">Description</Label>
-            <ClientOnly>
-              <TextEditor v-model="form.description" />
-            </ClientOnly>
-            <ErrorMessage name="description" :error="error" />
+            <div class="flex gap-2 items-start">
+              <div class="flex-1 space-y-2">
+                <Label for="price">Product discount</Label>
+                <Select v-model="form.discountStatus">
+                  <SelectTrigger class="w-full">
+                    <SelectValue placeholder="Product discount status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Select Product Discount</SelectLabel>
+                      <SelectItem :value="true"> Yes </SelectItem>
+                      <SelectItem :value="false"> No </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div class="flex-1 space-y-2">
+                <Label
+                  for="discount"
+                  :class="!form.discountStatus ? 'opacity-50' : ''"
+                  >Product discount</Label
+                >
+                <Input
+                  id="discount"
+                  v-model="form.discountPrice"
+                  type="number"
+                  placeholder="Enter product discount amount"
+                  class="pt-2"
+                  :disabled="!form.discountStatus"
+                />
+                <ErrorMessage name="discount" :error="error" />
+              </div>
+            </div>
+            <div class="space-y-2">
+              <Label for="description"
+                >Short description
+                <span class="text-xs">(Optional)</span>
+              </Label>
+              <Textarea v-model="form.shortDescription" />
+              <ErrorMessage name="shortDescription" :error="error" />
+            </div>
+            <div class="space-y-2">
+              <Label for="description">Description</Label>
+              <ClientOnly>
+                <TextEditor v-model="form.description" />
+              </ClientOnly>
+              <ErrorMessage name="description" :error="error" />
+            </div>
           </div>
         </div>
         <div
-          class="bg-white p-4 shadow-md rounded-xl border"
           v-for="(variation, key) in form.variation"
           :key="`variation-${key}`"
+          class="bg-white p-4 shadow-md rounded-xl border"
         >
           <div class="flex justify-between items-center cursor-pointer">
             <EditMode
@@ -111,18 +117,18 @@
               The first option will be auto selected.
             </p>
             <div
-              class="flex gap-2 mb-2 items-center justify-between"
               v-for="(option, index) in variation.options"
               :key="`options-${index}`"
+              class="flex gap-2 mb-2 items-center justify-between"
             >
               <Input
-                :placeholder="`${variation.name} name`"
                 v-model="form.variation[key].options[index].title"
+                :placeholder="`${variation.name} name`"
                 class="flex-1"
               />
               <Input
-                type="number"
                 v-model="form.variation[key].options[index].price"
+                type="number"
                 :placeholder="`${variation.name} price`"
                 class="flex-1"
               />
@@ -139,37 +145,62 @@
                 </SelectContent>
               </Select>
               <Button
+                v-if="variation.options.length > 1"
                 variant="destructiveOutline"
                 size="icon"
                 class="!w-10"
-                v-if="variation.options.length > 1"
                 @click="removeOption(key, index)"
               >
                 <XIcon class="text-red-500 text-xl" />
               </Button>
             </div>
-            <Button type="button" @click="addOption(key)" class="w-full">
+            <Button type="button" class="w-full" @click="addOption(key)">
               <PlusIcon /> Add {{ variation.name }} Option</Button
             >
           </div>
         </div>
         <div class="bg-white p-4 shadow-md rounded-xl border">
-          <form class="flex items-center gap-2" @submit.prevent="addVariation">
+          <form class="flex items-start gap-2" @submit.prevent="addVariation">
             <Input
               id="name"
-              type="text"
               v-model="variation"
+              type="text"
               placeholder="Enter variation name"
             />
             <Button type="submit"><PlusIcon />Add Variation</Button>
           </form>
+        </div>
+        <div class="bg-white p-4 shadow-md rounded-xl border">
+          <h2 class="text-2xl font-bold mb-2">SEO information</h2>
+          <div class="space-y-4">
+            <div class="space-y-2">
+              <Label for="metaTitle">Meta Title</Label>
+              <Input
+                id="metaTitle"
+                v-model="form.metaTitle"
+                type="text"
+                placeholder="SEO meta title"
+              />
+              <ErrorMessage name="metaTitle" :error="error" />
+            </div>
+            <div class="space-y-2">
+              <Label for="metaDescription">Meta Description</Label>
+              <Input
+                id="metaDescription"
+                v-model="form.metaDescription"
+                type="text"
+                placeholder="SEO meta description"
+              />
+              <ErrorMessage name="metaDescription" :error="error" />
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-span-1 space-y-5">
         <div class="bg-white p-4 shadow-md rounded-xl border">
           <h2 class="text-2xl font-bold mb-2">Product status</h2>
           <Select v-model="form.status">
-            <SelectTrigger class="flex-1">
+            <SelectTrigger class="w-full">
               <SelectValue placeholder="Select product status" />
             </SelectTrigger>
             <SelectContent>
@@ -184,7 +215,7 @@
         <div class="bg-white p-4 shadow-md rounded-xl border">
           <h2 class="text-2xl font-bold mb-2">Product stock status</h2>
           <Select v-model="form.stock">
-            <SelectTrigger class="flex-1">
+            <SelectTrigger class="w-full">
               <SelectValue placeholder="Select product stock status" />
             </SelectTrigger>
             <SelectContent>
@@ -201,16 +232,16 @@
           <div class="space-y-2">
             <div>
               <Select v-model="form.categoryID">
-                <SelectTrigger class="flex-1">
+                <SelectTrigger class="w-full">
                   <SelectValue placeholder="Select product category" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Select Product Category</SelectLabel>
                     <SelectItem
-                      :value="category._id"
                       v-for="(category, i) in categories"
                       :key="i"
+                      :value="category._id"
                     >
                       {{ category.name }}
                     </SelectItem>
@@ -219,48 +250,46 @@
               </Select>
               <ErrorMessage name="categoryID" :error="error" />
             </div>
-            <div>
-              <Select v-model="form.subCategoryID">
-                <SelectTrigger class="flex-1">
-                  <SelectValue placeholder="Select product sub category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Select Product Sub-Category</SelectLabel>
-                    <SelectItem
-                      :value="subCategory._id"
-                      v-for="(subCategory, i) in subCategories"
-                      :key="i"
-                    >
-                      {{ subCategory.name }}
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <ErrorMessage name="subCategoryID" :error="error" />
-            </div>
           </div>
         </div>
         <div class="bg-white p-4 shadow-md rounded-xl border">
-          <h2 class="text-2xl font-bold mb-2">Product images</h2>
+          <h2 class="text-2xl font-bold mb-2">Product thumbnail image</h2>
           <div
             class="border border-dashed flex items-center justify-center min-h-44 cursor-pointer rounded-xl p-2"
-            @click="imageModal = true"
+            @click="thumbnailModal = true"
           >
-            <ImageIcon :size="100" v-if="form.images.length === 0" />
+            <ImageIcon v-if="!form.thumbnail" :size="100" />
             <div
-              class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-5"
               v-else
+              class="w-full flex justify-center items-center relative max-h-28"
+            >
+              <img
+                :src="form.thumbnail"
+                class="w-full h-28 object-contain drop-shadow-xl rounded-lg"
+              />
+            </div>
+          </div>
+          <ErrorMessage name="thumbnail" :error="error" />
+        </div>
+        <div class="bg-white p-4 shadow-md rounded-xl border">
+          <h2 class="text-2xl font-bold mb-2">Product gallery images</h2>
+          <div
+            class="border border-dashed flex items-center justify-center min-h-44 cursor-pointer rounded-xl p-2"
+            @click="galleryModal = true"
+          >
+            <ImageIcon v-if="form.gallery.length === 0" :size="100" />
+            <div
+              v-else
+              class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-5"
             >
               <div
-                v-for="(image, i) in form.images"
+                v-for="(image, i) in form.gallery"
                 :key="i"
                 class="relative max-h-28"
               >
                 <img
                   :src="image"
                   class="size-full object-contain drop-shadow-xl rounded-lg"
-                  @click.stop="previewImage(image)"
                 />
               </div>
             </div>
@@ -271,13 +300,14 @@
           <h2 class="text-2xl font-bold mb-2">Product Video</h2>
           <Input
             id="video"
-            type="text"
             v-model="form.video"
-            placeholder="Enter product video url"
+            type="text"
+            placeholder="Youtube embed url"
           />
           <ErrorMessage name="video" :error="error" />
-          <div v-html="form.video" class="video-width mt-2"></div>
+          <div class="video-width mt-2" v-html="form.video"></div>
         </div>
+
         <div class="bg-white p-4 shadow-md rounded-xl border">
           <Button class="w-full" @click="submit">
             <LoaderIcon v-if="loading" class="mr-2 animate-spin" />
@@ -286,19 +316,13 @@
         </div>
       </div>
     </div>
-  </Admin>
-  <ImageModal
-    :modal="imageModal"
-    @close="imageModal = false"
-    multiSelect
-    v-model="form.images"
-  />
+  </Dashboard>
+  <ImageModal v-model="form.thumbnail" v-model:open="thumbnailModal" />
+  <ImageModal v-model="form.gallery" v-model:open="galleryModal" multiSelect />
 </template>
 
 <script>
-import eventBus from "@/lib/eventBus";
 import { ImageIcon, LoaderIcon, PlusIcon, XIcon } from "lucide-vue-next";
-import SlideUpDown from "vue-slide-up-down";
 import { toast } from "vue-sonner";
 
 export default {
@@ -306,7 +330,6 @@ export default {
   components: {
     PlusIcon,
     XIcon,
-    SlideUpDown,
     ImageIcon,
     LoaderIcon,
   },
@@ -314,26 +337,27 @@ export default {
     return {
       showMaterial: false,
       form: {
+        categoryID: "",
         name: "",
         price: 0,
-        dealingPrice: 0,
-        commission: 0,
         status: true,
+        shortDescription: "",
         description: "",
         variation: [],
         video: "",
-        categoryID: "",
-        subCategoryID: "",
         stock: true,
         discountStatus: false,
-        discount: 0,
-        images: [],
+        discountPrice: 0,
+        thumbnail: "",
+        gallery: [],
+        metaTitle: "",
+        metaDescription: "",
       },
       error: {},
       variation: "",
       categories: [],
-      subCategories: [],
-      imageModal: false,
+      thumbnailModal: false,
+      galleryModal: false,
       loading: false,
       initLoad: false,
     };
@@ -344,16 +368,8 @@ export default {
     },
   },
   watch: {
-    "form.categoryID"() {
-      if (!this.initLoad) return;
-      this.form.subCategoryID = "";
-      this.fetchSubCategory();
-    },
-    "form.dealingPrice"() {
-      this.form.price = this.form.dealingPrice + this.form.commission;
-    },
-    "form.commission"() {
-      this.form.price = this.form.dealingPrice + this.form.commission;
+    "form.discountStatus"(value) {
+      if (!value) this.form.discountPrice = 0;
     },
   },
   mounted() {
@@ -373,12 +389,11 @@ export default {
       try {
         this.loading = true;
         const { api } = useApi();
-        const { item } = await api.get("/admin/product/single-product", {
+        const { item } = await api.get("/dashboard/product/single-product", {
           id: this.$route.query.id,
         });
         this.form = item;
         await this.fetchCategory();
-        await this.fetchSubCategory();
         this.initLoad = true;
       } catch (error) {
         console.error(error);
@@ -390,30 +405,25 @@ export default {
       try {
         const { api } = useApi();
         await api.get2("/");
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     },
     async fetchCategory() {
       try {
         const { api } = useApi();
-        const { items } = await api.get2("/admin/product/category");
+        const { items } = await api.get2("/dashboard/product/category");
         this.categories = items;
       } catch (error) {
         console.error(error);
       }
     },
-    async fetchSubCategory() {
-      try {
-        const { api } = useApi();
-        const { items } = await api.get2("/admin/product/sub-category", {
-          _id: this.form.categoryID,
-        });
-        this.subCategories = items;
-      } catch (error) {
-        console.error(error);
-      }
-    },
     addVariation() {
-      if (!this.form.variation[this.variation] && this.variation.length > 0) {
+      if (!this.variation) {
+        toast.error("Please type a variation name");
+      } else if (this.form.variation.some((v) => v.name === this.variation)) {
+        toast.error("Variation already exists");
+      } else {
         this.form.variation.push({
           name: this.variation,
           options: [{ title: "", price: 0, stock: true }],
@@ -436,19 +446,20 @@ export default {
     removeOption(key, index) {
       this.form.variation[key].options.splice(index, 1);
     },
-    previewImage(url) {
-      eventBus.emit("previewImage", new Set([url, ...this.form.images]));
-    },
     async submit() {
       try {
         this.loading = true;
         this.error = {};
         const { api } = useApi();
-        await api.post("/admin/product", this.form);
+        if (this.editMode) {
+          await api.put("/dashboard/product", this.form);
+        } else {
+          await api.post("/dashboard/product", this.form);
+        }
         toast.success(
           `Product ${this.editMode ? "updated" : "created"} successfully`
         );
-        this.$router.push("/admin/product");
+        this.$router.push("/dashboard/product");
       } catch (error) {
         console.error(error);
         const errors = error.response?._data?.errors;
@@ -465,6 +476,7 @@ export default {
 
 <style>
 .video-width iframe {
-  @apply max-h-52 !w-full;
+  max-height: 200px;
+  width: 100% !important;
 }
 </style>

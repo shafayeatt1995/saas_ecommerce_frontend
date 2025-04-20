@@ -14,18 +14,22 @@ export const useApi = () => {
       api2 = false
     ) {
       let token = null;
+      let storeid = null;
       if (typeof window === "undefined") {
         const cookie = useRequestHeaders(["cookie"])?.cookie;
         if (cookie) {
           const parse = cookieParse(cookie);
           token = parse?.sessionToken || null;
+          storeid = parse?.storeID || null;
         }
       } else {
         const parse = cookieParse();
         token = parse?.sessionToken || null;
+        storeid = parse?.storeID || null;
       }
       const headers = {
         "Content-Type": "application/json",
+        storeid,
         ...(token
           ? token.startsWith("Bearer")
             ? { Authorization: token }
