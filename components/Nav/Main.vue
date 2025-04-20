@@ -104,6 +104,7 @@ import {
   LayoutDashboard,
   LayoutGrid,
   Boxes,
+  Truck,
 } from "lucide-vue-next";
 import { useSidebar } from "../ui/sidebar";
 export default {
@@ -129,6 +130,11 @@ export default {
           name: "Product",
           url: "/dashboard/product",
           icon: Boxes,
+        },
+        {
+          name: "Delivery",
+          url: "/dashboard/delivery",
+          icon: Truck,
         },
         {
           title: "Playground",
