@@ -105,6 +105,7 @@ import {
   LayoutGrid,
   Boxes,
   Truck,
+  FileText,
 } from "lucide-vue-next";
 import { useSidebar } from "../ui/sidebar";
 export default {
@@ -135,6 +136,11 @@ export default {
           name: "Delivery",
           url: "/dashboard/delivery",
           icon: Truck,
+        },
+        {
+          name: "Legal pages",
+          url: "/dashboard/legal-pages",
+          icon: FileText,
         },
         {
           title: "Playground",
