@@ -106,6 +106,7 @@ import {
   Boxes,
   Truck,
   FileText,
+  TicketPercent,
 } from "lucide-vue-next";
 import { useSidebar } from "../ui/sidebar";
 export default {
@@ -136,6 +137,11 @@ export default {
           name: "Delivery",
           url: "/dashboard/delivery",
           icon: Truck,
+        },
+        {
+          name: "Coupon",
+          url: "/dashboard/coupon",
+          icon: TicketPercent,
         },
         {
           name: "Legal pages",
