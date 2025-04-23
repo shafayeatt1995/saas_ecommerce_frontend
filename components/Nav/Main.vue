@@ -58,7 +58,7 @@
     </SidebarMenu>
   </SidebarGroup>
   <SidebarGroup>
-    <SidebarGroupLabel>Platform</SidebarGroupLabel>
+    <SidebarGroupLabel>Settings</SidebarGroupLabel>
     <SidebarMenu>
       <Collapsible
         v-for="item in navMain"
@@ -83,10 +83,22 @@
                 v-for="subItem in item.items"
                 :key="subItem.title"
               >
-                <SidebarMenuSubButton as-child>
-                  <a :href="subItem.url">
-                    <span>{{ subItem.title }}</span>
-                  </a>
+                <SidebarMenuSubButton
+                  as-child
+                  :class="
+                    currentUrl === subItem.url
+                      ? 'bg-gray-800 text-white hover:bg-gray-800 hover:text-white'
+                      : ''
+                  "
+                >
+                  <NuxtLink :to="subItem.url">
+                    <component
+                      :is="subItem.icon"
+                      v-if="subItem.icon"
+                      :class="currentUrl === subItem.url ? ' stroke-white' : ''"
+                    />
+                    <span class="">{{ subItem.title }}</span>
+                  </NuxtLink>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
             </SidebarMenuSub>
@@ -102,11 +114,13 @@ import {
   Settings2,
   MoreHorizontal,
   LayoutDashboard,
-  LayoutGrid,
-  Boxes,
   Truck,
   FileText,
   TicketPercent,
+  Store,
+  DollarSign,
+  Grid2x2Plus,
+  Package,
 } from "lucide-vue-next";
 import { useSidebar } from "../ui/sidebar";
 export default {
@@ -126,12 +140,12 @@ export default {
         {
           name: "Category",
           url: "/dashboard/category",
-          icon: LayoutGrid,
+          icon: Grid2x2Plus,
         },
         {
           name: "Product",
           url: "/dashboard/product",
-          icon: Boxes,
+          icon: Package,
         },
         {
           name: "Delivery",
@@ -148,44 +162,23 @@ export default {
           url: "/dashboard/legal-pages",
           icon: FileText,
         },
-        {
-          title: "Playground",
-          url: "#",
-          icon: Boxes,
-          isActive: false,
-          items: [
-            {
-              title: "Starred",
-              url: "#",
-            },
-            {
-              title: "Settings",
-              url: "#",
-            },
-          ],
-        },
       ],
       navMain: [
         {
           title: "Settings",
           url: "#",
           icon: Settings2,
+          isActive: this.$route.path.startsWith("/dashboard/settings") || false,
           items: [
             {
-              title: "General",
-              url: "#",
+              title: "Shop",
+              url: "/dashboard/settings/shop",
+              icon: Store,
             },
             {
-              title: "Team",
-              url: "#",
-            },
-            {
-              title: "Billing",
-              url: "#",
-            },
-            {
-              title: "Limits",
-              url: "#",
+              title: "Payment",
+              url: "/dashboard/settings/payment",
+              icon: DollarSign,
             },
           ],
         },

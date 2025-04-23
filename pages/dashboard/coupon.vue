@@ -451,11 +451,11 @@ export default {
         day: "numeric",
       }).format(new Date(value));
     },
-    async updateStatus(item) {
+    async updateStatus(name) {
       try {
         this.loading = true;
         const { api } = useApi();
-        await api.post("/dashboard/coupon/toggle-status", { _id: item._id });
+        await api.post("/dashboard/coupon/toggle-status", { name });
         toast.success("Status changed successfully");
       } catch (error) {
         console.error(error);
