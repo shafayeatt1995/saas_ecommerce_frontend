@@ -15,8 +15,8 @@
             <ErrorMessage name="name" :error="error" />
           </div>
           <div class="space-y-2">
-            <Label for="name">Store Type</Label>
-            <Select v-model="form.type">
+            <Label for="type">Store Type</Label>
+            <Select id="type" v-model="form.type" placeholder="Store type">
               <SelectTrigger class="w-full">
                 <SelectValue placeholder="Select a store type" />
               </SelectTrigger>
@@ -43,7 +43,7 @@
           variant="destructive"
           >Close</AlertDialogCancel
         >
-        <Button @click="createStore">
+        <Button @click="createStore" :disabled="loading">
           <LoaderIcon v-if="loading" class="animate-spin" />
           Create</Button
         >

@@ -21,6 +21,7 @@
     "dropzone-vue3": "^1.0.2",
     "lucide-vue-next": "^0.501.0",
     "nuxt": "^3.16.2",
+    "qrcode-vue3": "^1.7.1",
     "reka-ui": "^2.2.0",
     "shadcn-nuxt": "2.1.0",
     "tailwind-merge": "^3.2.0",

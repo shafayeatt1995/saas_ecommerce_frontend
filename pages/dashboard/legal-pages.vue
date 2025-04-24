@@ -19,8 +19,14 @@
               class="transition-all duration-300"
             />
           </div>
-          <SlideUpDown :active="showAbout" :duration="300" class="">
-            <div class="pt-5">
+          <SlideUpDown :active="showAbout" :duration="300">
+            <div
+              v-if="initLoading"
+              class="flex justify-center items-center py-20"
+            >
+              <LoaderIcon class="animate-spin" />
+            </div>
+            <div class="pt-5" v-else>
               <ClientOnly>
                 <TextEditor
                   v-model="form.about"
@@ -41,8 +47,14 @@
               class="transition-all duration-300"
             />
           </div>
-          <SlideUpDown :active="showPrivacy" :duration="300" class="">
-            <div class="pt-5">
+          <SlideUpDown :active="showPrivacy" :duration="300">
+            <div
+              v-if="initLoading"
+              class="flex justify-center items-center py-20"
+            >
+              <LoaderIcon class="animate-spin" />
+            </div>
+            <div class="pt-5" v-else>
               <ClientOnly>
                 <TextEditor
                   v-model="form.privacy"
@@ -63,8 +75,14 @@
               class="transition-all duration-300"
             />
           </div>
-          <SlideUpDown :active="showTerms" :duration="300" class="">
-            <div class="pt-5">
+          <SlideUpDown :active="showTerms" :duration="300">
+            <div
+              v-if="initLoading"
+              class="flex justify-center items-center py-20"
+            >
+              <LoaderIcon class="animate-spin" />
+            </div>
+            <div class="pt-5" v-else>
               <ClientOnly>
                 <TextEditor
                   v-model="form.terms"
@@ -87,8 +105,14 @@
               class="transition-all duration-300"
             />
           </div>
-          <SlideUpDown :active="showReturn" :duration="300" class="">
-            <div class="pt-5">
+          <SlideUpDown :active="showReturn" :duration="300">
+            <div
+              v-if="initLoading"
+              class="flex justify-center items-center py-20"
+            >
+              <LoaderIcon class="animate-spin" />
+            </div>
+            <div class="pt-5" v-else>
               <ClientOnly>
                 <TextEditor
                   v-model="form.returnPolicy"
@@ -132,7 +156,18 @@ export default {
         returnPolicy: "",
       },
       loading: false,
+      initLoading: true,
     };
+  },
+  computed: {
+    storeID() {
+      return useStore().storeID;
+    },
+  },
+  watch: {
+    storeID() {
+      this.fetchLegalPages();
+    },
   },
   mounted() {
     this.fetchLegalPages();
@@ -140,11 +175,14 @@ export default {
   methods: {
     async fetchLegalPages() {
       try {
+        this.initLoading = true;
         const { api } = useApi();
         const { legalPages } = await api.get("/dashboard/legal-pages");
         this.form = legalPages;
       } catch (error) {
         this.$toast.error(error.response.data.message);
+      } finally {
+        this.initLoading = false;
       }
     },
     async submit() {

@@ -103,6 +103,7 @@ export const useUtils = () => {
   };
 
   const setCookie = (name, value, options = {}) => {
+    if (typeof window === "undefined") return;
     let expiresOption = "";
     const { expires, ...otherOptions } = options;
 

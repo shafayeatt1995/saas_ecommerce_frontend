@@ -39,8 +39,8 @@
                 <ErrorMessage name="status" :error="error" />
               </div>
               <div class="space-y-2">
-                <Label for="">Payment process message note </Label>
-                <Textarea id="name" type="text" v-model="codForm.message" />
+                <Label for="message">Payment process message note </Label>
+                <Textarea id="message" type="text" v-model="codForm.message" />
                 <ErrorMessage name="message" :error="error" />
               </div>
               <div class="flex items-center gap-2">
@@ -139,8 +139,12 @@
                   </div>
                 </div>
                 <div class="space-y-2">
-                  <Label for="">Payment process message note </Label>
-                  <Textarea id="name" type="text" v-model="bkashForm.message" />
+                  <Label for="message">Payment process message note </Label>
+                  <Textarea
+                    id="message"
+                    type="text"
+                    v-model="bkashForm.message"
+                  />
                   <ErrorMessage name="message" :error="error" />
                 </div>
                 <hr />
@@ -180,7 +184,7 @@
                           :duration="200"
                         >
                           <Input
-                            id="name"
+                            id="amount"
                             type="number"
                             v-model="bkashForm.value"
                           />
@@ -269,6 +273,11 @@ export default {
       error: {},
     };
   },
+  computed: {
+    storeID() {
+      return useStore().storeID;
+    },
+  },
   watch: {
     "bkashForm.type"() {
       this.bkashForm.value = 0;
@@ -278,6 +287,9 @@ export default {
       this.accept = false;
       this.codForm = { ...this.item.cod };
       this.bkashForm = { ...this.item.bkash };
+    },
+    storeID() {
+      this.fetchPayment();
     },
   },
   mounted() {

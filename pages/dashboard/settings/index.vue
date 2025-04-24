@@ -3,7 +3,7 @@
 export default {
   name: "Settings",
   mounted() {
-    this.$router.push("/dashboard/settings/shop");
+    this.$router.push("/dashboard/settings/store");
   },
 };
 </script>

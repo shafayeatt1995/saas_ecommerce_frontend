@@ -162,7 +162,6 @@
         <div class="bg-white p-4 shadow-md rounded-xl border">
           <form class="flex items-start gap-2" @submit.prevent="addVariation">
             <Input
-              id="name"
               v-model="variation"
               type="text"
               placeholder="Enter variation name"

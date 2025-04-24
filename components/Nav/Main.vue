@@ -171,8 +171,8 @@ export default {
           isActive: this.$route.path.startsWith("/dashboard/settings") || false,
           items: [
             {
-              title: "Shop",
-              url: "/dashboard/settings/shop",
+              title: "Store",
+              url: "/dashboard/settings/store",
               icon: Store,
             },
             {

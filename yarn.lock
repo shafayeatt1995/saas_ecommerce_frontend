@@ -6390,6 +6390,18 @@ pump@^3.0.0:
     end-of-stream "^1.1.0"
     once "^1.3.1"
 
+qrcode-generator@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/qrcode-generator/-/qrcode-generator-1.4.4.tgz#63f771224854759329a99048806a53ed278740e7"
+  integrity sha512-HM7yY8O2ilqhmULxGMpcHSF1EhJJ9yBj8gvDEuZ6M+KGJ0YY2hKpnXvRD+hZPLrDVck3ExIGhmPtSdcjC+guuw==
+
+qrcode-vue3@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/qrcode-vue3/-/qrcode-vue3-1.7.1.tgz#d2cf627f9ffefd48d7ffb1dc0402a831781890df"
+  integrity sha512-Xa82NslFJUqsnQbLtc1qO+xPEOeFaTRxktg3ugRd2Pk116kta1X+7GLSEPQj9gor8jWVyfmLmhYZHuANnRZoLQ==
+  dependencies:
+    qrcode-generator "^1.4.4"
+
 qs@^6.9.6:
   version "6.14.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.14.0.tgz#c63fa40680d2c5c941412a0e899c89af60c0a930"
