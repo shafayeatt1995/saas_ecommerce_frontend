@@ -121,6 +121,7 @@ import {
   DollarSign,
   Grid2x2Plus,
   Package,
+  Megaphone,
 } from "lucide-vue-next";
 import { useSidebar } from "../ui/sidebar";
 export default {
@@ -179,6 +180,11 @@ export default {
               title: "Payment",
               url: "/dashboard/settings/payment",
               icon: DollarSign,
+            },
+            {
+              title: "Marketing & SEO",
+              url: "/dashboard/settings/marketing-seo",
+              icon: Megaphone,
             },
           ],
         },

@@ -1,4 +1,5 @@
 <template>
+  <Head><title>Store - Settings</title></Head>
   <Dashboard>
     <h1 class="text-2xl font-bold">Store settings</h1>
     <div class="flex gap-4 mt-2 flex-col-reverse lg:flex-row">
@@ -90,10 +91,12 @@
               <ErrorMessage name="metaDescription" :error="error" />
             </div>
           </div>
-          <Button class="mt-5 w-full" @click="updateStore">
-            <LoaderIcon v-if="loading" class="mr-2 animate-spin" />
-            Update Store information</Button
-          >
+          <div class="flex justify-end mt-4">
+            <Button @click="updateStore">
+              <LoaderIcon v-if="loading" class="mr-2 animate-spin" />
+              Update Store information</Button
+            >
+          </div>
         </div>
       </div>
       <div class="flex-1 space-y-4">
