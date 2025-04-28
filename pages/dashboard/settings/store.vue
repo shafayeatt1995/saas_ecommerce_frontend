@@ -71,7 +71,7 @@
             </div>
             <div class="col-span-2 space-y-2">
               <Label for="metaTitle">Store meta title</Label>
-              <Skeleton v-if="initLoading" class="w-full h-4" />
+              <Skeleton v-if="initLoading" class="w-full h-10" />
               <Input
                 id="metaTitle"
                 v-model="form.metaTitle"
@@ -151,7 +151,7 @@
               v-else
               class="w-full flex justify-center items-center relative max-h-28"
             >
-              <img
+              <NuxtImg
                 :src="form.logo"
                 class="w-full h-28 object-contain drop-shadow-xl rounded-lg"
               />

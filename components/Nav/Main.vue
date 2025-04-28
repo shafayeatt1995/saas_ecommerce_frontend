@@ -122,6 +122,8 @@ import {
   Grid2x2Plus,
   Package,
   Megaphone,
+  MessageSquareMore,
+  Share2,
 } from "lucide-vue-next";
 import { useSidebar } from "../ui/sidebar";
 export default {
@@ -185,6 +187,16 @@ export default {
               title: "Marketing & SEO",
               url: "/dashboard/settings/marketing-seo",
               icon: Megaphone,
+            },
+            {
+              title: "Chat Support",
+              url: "/dashboard/settings/chat-support",
+              icon: MessageSquareMore,
+            },
+            {
+              title: "Social Links",
+              url: "/dashboard/settings/social-links",
+              icon: Share2,
             },
           ],
         },

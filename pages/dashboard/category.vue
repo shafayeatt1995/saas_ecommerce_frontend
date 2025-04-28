@@ -25,7 +25,10 @@
               v-if="value"
               class="flex justify-end md:justify-start items-center"
             >
-              <img :src="value" class="w-full h-20 object-contain rounded-lg" />
+              <NuxtImg
+                :src="value"
+                class="w-full h-20 object-contain rounded-lg"
+              />
             </div>
             <div v-else>
               <ImageIcon :size="100" />
@@ -108,7 +111,7 @@
           >
             <ImageIcon v-if="form.image === ''" :size="100" />
             <div v-else class="flex justify-center items-center">
-              <img
+              <NuxtImg
                 :src="form.image"
                 class="w-full max-h-60 object-contain drop-shadow-xl rounded-lg"
               />

@@ -37,7 +37,7 @@
                 </span>
               </div>
 
-              <img :src="image.url" class="size-full object-contain" />
+              <NuxtImg :src="image.url" class="size-full object-contain" />
             </button>
             <EditMode
               v-model="imgs[i].name"

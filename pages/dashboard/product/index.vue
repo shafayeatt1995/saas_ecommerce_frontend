@@ -24,11 +24,15 @@
           </div>
         </template>
         <template #thumbnail="{ value }">
-          <img :src="value" class="w-full max-h-20 object-contain" />
+          <NuxtImg :src="value" class="w-full max-h-20 object-contain" />
         </template>
-        <template #category="{ value }">
-          <p v-if="value?.name">{{ value.name }}</p>
-          <p v-else>N/A</p>
+        <template #stock="{ value }">
+          <Badge variant="success" v-if="value">In Stock</Badge>
+          <Badge variant="destructiveOutline" v-else>Out of Stock</Badge>
+        </template>
+        <template #status="{ value }">
+          <Badge variant="success" v-if="value">Published</Badge>
+          <Badge variant="destructiveOutline" v-else>Draft</Badge>
         </template>
         <template #price="{ item }">
           <div>
@@ -135,8 +139,9 @@ export default {
       return [
         { key: "thumbnail", label: "THUMBNAIL", span: "minmax(100px, 1fr)" },
         { key: "name", label: "NAME", span: "minmax(200px, 1fr)" },
-        { key: "category", label: "CATEGORY", span: "minmax(200px, 1fr)" },
-        { key: "price", label: "Price", span: "minmax(200px, 1fr)" },
+        { key: "price", label: "Price", span: "minmax(180px, 1fr)" },
+        { key: "stock", label: "Stock", span: "minmax(100px, 1fr)" },
+        { key: "status", label: "Status", span: "minmax(100px, 1fr)" },
         { key: "actions", label: "Actions", span: "minmax(100px, 1fr)" },
       ];
     },

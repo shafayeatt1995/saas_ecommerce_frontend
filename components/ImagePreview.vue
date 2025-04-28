@@ -1,7 +1,7 @@
 <template>
   <viewer ref="viewer" :images="images" class="viewer hidden" @inited="inited">
     <template #default="scope">
-      <img v-for="src in scope.images" :key="src" :src="src" />
+      <NuxtImg v-for="src in scope.images" :key="src" :src="src" />
       {{ scope.options }}
     </template>
   </viewer>

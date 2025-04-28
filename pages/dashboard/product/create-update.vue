@@ -3,10 +3,15 @@
     <title>Product create & update</title>
   </Head>
   <Dashboard>
-    <h1 class="text-lg lg:text-3xl font-bold">
-      {{ editMode ? "Update" : "Create" }} Product
+    <h1 class="text-lg lg:text-3xl font-bold flex items-center gap-2">
+      <NuxtLink
+        to="/dashboard/product"
+        :class="cn(buttonVariants({ variant: 'outline' }))"
+        ><ChevronLeftIcon /> Back</NuxtLink
+      >
+      <span> {{ editMode ? "Update" : "Create" }} Product </span>
     </h1>
-    <div class="grid grid-cols-1 lg:grid-cols-3 my-3 w-full gap-5">
+    <div class="grid grid-cols-1 xl:grid-cols-3 my-3 w-full gap-5">
       <div class="col-span-2 space-y-5">
         <div class="bg-white p-4 shadow-md rounded-xl space-y-2 border">
           <h2 class="text-2xl font-bold mb-2">Product basic info</h2>
@@ -21,8 +26,21 @@
               />
               <ErrorMessage name="name" :error="error" />
             </div>
+            <div class="space-y-2">
+              <Label for="slug"
+                >Product slug
+                <span class="text-xs">(For SEO Friendly URL)</span></Label
+              >
+              <Input
+                id="slug"
+                v-model="form.slug"
+                type="text"
+                placeholder="Enter product slug"
+              />
+              <ErrorMessage name="slug" :error="error" />
+            </div>
             <div>
-              <p class="font-bold pb-2">
+              <p class="font-bold">
                 Product price:
                 <span v-if="form.discountStatus && form.discountPrice > 0">
                   <del>{{ form.price }}</del>
@@ -41,7 +59,6 @@
                 <ErrorMessage name="price" :error="error" />
               </div>
             </div>
-
             <div class="flex gap-2 items-start">
               <div class="flex-1 space-y-2">
                 <Label for="price">Product discount</Label>
@@ -92,12 +109,70 @@
             </div>
           </div>
         </div>
+        <SlideUpDown
+          :active="form.variation && form.variation.length > 0"
+          :duration="300"
+        >
+          <div class="bg-white p-4 shadow-md rounded-xl space-y-2 border">
+            <h2 class="text-2xl font-bold mb-2">
+              Product variation pricing checker
+            </h2>
+            <div class="space-y-4">
+              <div class="flex flex-col justify-center font-bold">
+                <div class="flex text-center text-lg">
+                  <p class="mr-2">Product price:</p>
+                  <p
+                    class="flex items-center gap-1"
+                    v-if="selectVariationDiscountPrice > 0"
+                  >
+                    <del>{{ $taka }}{{ selectVariationActualPrice }}</del>
+                    <span
+                      >{{ $taka
+                      }}{{
+                        selectVariationActualPrice -
+                        selectVariationDiscountPrice
+                      }}</span
+                    >
+                  </p>
+                  <p v-else>{{ $taka }}{{ selectVariationActualPrice }}</p>
+                </div>
+              </div>
+              <div
+                v-for="(variation, key) in form.variation"
+                :key="`variation-${key}`"
+                class="flex items-center gap-2"
+              >
+                <p
+                  class="flex gap-2 justify-between items-center cursor-pointer mb-2 text-xl font-bold"
+                >
+                  {{ variation.name }}:
+                </p>
+                <div class="flex flex-1 flex-wrap gap-2">
+                  <div
+                    v-for="(option, index) in variation.options"
+                    :key="`option-${index}`"
+                    class="flex items-center gap-1"
+                  >
+                    <Button
+                      :variant="
+                        checkVariant(key, index) ? 'default' : 'outline'
+                      "
+                      @click="setVariant(key, index)"
+                      :disabled="!option.stock"
+                      >{{ option.title }}</Button
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </SlideUpDown>
         <div
           v-for="(variation, key) in form.variation"
           :key="`variation-${key}`"
           class="bg-white p-4 shadow-md rounded-xl border"
         >
-          <div class="flex justify-between items-center cursor-pointer">
+          <div class="flex gap-2 justify-between items-center cursor-pointer">
             <EditMode
               v-model="variation.name"
               showEdit
@@ -119,40 +194,90 @@
             <div
               v-for="(option, index) in variation.options"
               :key="`options-${index}`"
-              class="flex gap-2 mb-2 items-center justify-between"
+              class="grid gap-2 mb-6 md:mb-2 items-end justify-between relative"
+              :class="
+                variation.options && variation.options.length > 1
+                  ? 'grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1fr_36px]'
+                  : 'grid-cols-1 md:grid-cols-4'
+              "
             >
-              <Input
-                v-model="form.variation[key].options[index].title"
-                :placeholder="`${variation.name} name`"
-                class="flex-1"
-              />
-              <Input
-                v-model="form.variation[key].options[index].price"
-                type="number"
-                :placeholder="`${variation.name} price`"
-                class="flex-1"
-              />
-              <Select v-model="form.variation[key].options[index].stock">
-                <SelectTrigger class="flex-1">
-                  <SelectValue placeholder="Select stock" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Select Stock Status</SelectLabel>
-                    <SelectItem :value="true"> Stock Available </SelectItem>
-                    <SelectItem :value="false"> Out of Stock </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Button
-                v-if="variation.options.length > 1"
-                variant="destructiveOutline"
-                size="icon"
-                class="!w-10"
-                @click="removeOption(key, index)"
-              >
-                <XIcon class="text-red-500 text-xl" />
-              </Button>
+              <div class="space-y-2">
+                <Label v-if="isMobile || index === 0" class="font-bold"
+                  >Variation name</Label
+                >
+                <Input
+                  v-model="form.variation[key].options[index].title"
+                  :placeholder="`${variation.name} name`"
+                  class="flex-1"
+                />
+              </div>
+              <div class="space-y-2">
+                <Label v-if="isMobile || index === 0" class="font-bold"
+                  >Extra price</Label
+                >
+                <div class="relative">
+                  <Input
+                    v-model="form.variation[key].options[index].price"
+                    type="number"
+                    :placeholder="`${variation.name} price`"
+                    class="w-full"
+                  />
+                </div>
+              </div>
+              <div class="space-y-2">
+                <Label v-if="isMobile || index === 0" class="font-bold"
+                  >Extra discount
+                </Label>
+                <Input
+                  v-model="form.variation[key].options[index].discount"
+                  type="number"
+                  :placeholder="`Variation discount amount`"
+                  class="w-full"
+                />
+              </div>
+              <div class="space-y-2">
+                <Label v-if="isMobile || index === 0" class="font-bold"
+                  >Variation stock</Label
+                >
+                <Select v-model="form.variation[key].options[index].stock">
+                  <SelectTrigger class="w-full">
+                    <SelectValue placeholder="Select stock" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Select Stock Status</SelectLabel>
+                      <SelectItem :value="true"> Stock Available </SelectItem>
+                      <SelectItem :value="false"> Out of Stock </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div class="flex gap-1">
+                <!-- <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger as-child>
+                      <Button
+                        type="button"
+                        size="icon"
+                        @click="calculatePrice(key, index)"
+                      >
+                        <CalculatorIcon />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Variant price Calculator</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider> -->
+                <Button
+                  v-if="variation.options.length > 1"
+                  variant="destructiveOutline"
+                  size="icon"
+                  @click="removeOption(key, index)"
+                >
+                  <XIcon class="text-red-500 text-xl" />
+                </Button>
+              </div>
             </div>
             <Button type="button" class="w-full" @click="addOption(key)">
               <PlusIcon /> Add {{ variation.name }} Option</Button
@@ -184,10 +309,9 @@
             </div>
             <div class="space-y-2">
               <Label for="metaDescription">Meta Description</Label>
-              <Input
+              <Textarea
                 id="metaDescription"
                 v-model="form.metaDescription"
-                type="text"
                 placeholder="SEO meta description"
               />
               <ErrorMessage name="metaDescription" :error="error" />
@@ -230,7 +354,7 @@
           <h2 class="text-2xl font-bold mb-2">Product Category</h2>
           <div class="space-y-2">
             <div>
-              <Select v-model="form.categoryID">
+              <Select v-model="form.categoryIDs" multiple>
                 <SelectTrigger class="w-full">
                   <SelectValue placeholder="Select product category" />
                 </SelectTrigger>
@@ -262,7 +386,7 @@
               v-else
               class="w-full flex justify-center items-center relative max-h-28"
             >
-              <img
+              <NuxtImg
                 :src="form.thumbnail"
                 class="w-full h-28 object-contain drop-shadow-xl rounded-lg"
               />
@@ -286,7 +410,7 @@
                 :key="i"
                 class="relative max-h-28"
               >
-                <img
+                <NuxtImg
                   :src="image"
                   class="size-full object-contain drop-shadow-xl rounded-lg"
                 />
@@ -321,7 +445,17 @@
 </template>
 
 <script>
-import { ImageIcon, LoaderIcon, PlusIcon, XIcon } from "lucide-vue-next";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import {
+  CalculatorIcon,
+  ChevronLeftIcon,
+  ImageIcon,
+  LoaderIcon,
+  PlusIcon,
+  XIcon,
+} from "lucide-vue-next";
+import SlideUpDown from "vue-slide-up-down";
 import { toast } from "vue-sonner";
 
 export default {
@@ -331,13 +465,17 @@ export default {
     XIcon,
     ImageIcon,
     LoaderIcon,
+    CalculatorIcon,
+    ChevronLeftIcon,
+    SlideUpDown,
   },
   data() {
     return {
       showMaterial: false,
       form: {
-        categoryID: "",
+        categoryIDs: [],
         name: "",
+        slug: "",
         price: 0,
         status: true,
         shortDescription: "",
@@ -358,17 +496,57 @@ export default {
       thumbnailModal: false,
       galleryModal: false,
       loading: false,
-      initLoad: false,
+      initLoad: true,
+      selectVariations: [],
     };
   },
   computed: {
     editMode() {
       return !!this.$route.query.id;
     },
+    isMobile() {
+      const { value } = useData();
+      return value.isMobile;
+    },
+    variationActualPrice() {
+      return (key, index) =>
+        (this.form.variation[key].options[index].price || 0) +
+        (this.form.price || 0);
+    },
+    variationDiscountPrice() {
+      return (key, index) =>
+        (this.form.discountPrice || 0) +
+        (this.form.variation[key].options[index].discount || 0);
+    },
+    checkVariant() {
+      return (key, index) => this.selectVariations[key] === index;
+    },
+    selectedVariant() {
+      return () =>
+        this.selectVariations.map((v, i) => this.form.variation[i]?.options[v]);
+    },
+    selectVariationDiscountPrice() {
+      return (
+        this.selectedVariant().reduce((acc, { discount = 0 }) => {
+          return acc + discount;
+        }, this.form.discountPrice || 0) || 0
+      );
+    },
+    selectVariationActualPrice() {
+      return (
+        this.selectedVariant().reduce((acc, { price = 0 }) => {
+          return acc + price;
+        }, this.form.price || 0) || 0
+      );
+    },
   },
   watch: {
     "form.discountStatus"(value) {
       if (!value) this.form.discountPrice = 0;
+    },
+    "form.name"(value) {
+      const { strSlug } = useUtils();
+      if (!this.initLoad) this.form.slug = strSlug(value, "-");
     },
   },
   mounted() {
@@ -377,13 +555,15 @@ export default {
       this.fetchProduct();
     } else {
       this.fetchCategory();
-      this.initLoad = true;
+      this.initLoad = false;
     }
     this.interval = setInterval(() => {
       this.trigger();
     }, 12 * 60 * 1000);
   },
   methods: {
+    cn,
+    buttonVariants,
     async fetchProduct() {
       try {
         this.loading = true;
@@ -393,7 +573,8 @@ export default {
         });
         this.form = item;
         await this.fetchCategory();
-        this.initLoad = true;
+        this.selectVariations = item.variation.map(() => 0);
+        this.initLoad = false;
       } catch (error) {
         console.error(error);
       } finally {
@@ -425,8 +606,9 @@ export default {
       } else {
         this.form.variation.push({
           name: this.variation,
-          options: [{ title: "", price: 0, stock: true }],
+          options: [{ title: "", price: 0, discount: 0, stock: true }],
         });
+        this.selectVariations.push(0);
         this.variation = "";
       }
     },
@@ -439,11 +621,13 @@ export default {
       this.form.variation[key].options.push({
         title: "",
         price: 0,
+        discount: 0,
         stock: true,
       });
     },
     removeOption(key, index) {
       this.form.variation[key].options.splice(index, 1);
+      if (this.selectVariations[key] === index) this.selectVariations[key] = 0;
     },
     async submit() {
       try {
@@ -469,6 +653,20 @@ export default {
         this.loading = false;
       }
     },
+    calculatePrice(key, index) {
+      this.form.variation[key].options[index].discount =
+        this.form.variation[key].options[index].discount -
+        this.form.discountPrice;
+
+      this.form.variation[key].options[index].price =
+        (this.form.variation[key].options[index].price || 0) -
+        (this.form.price || 0) +
+        (this.form.discountPrice || 0) +
+        (this.form.variation[key].options[index].discount || 0);
+    },
+    setVariant(key, index) {
+      this.selectVariations[key] = index;
+    },
   },
 };
 </script>
@@ -477,5 +675,8 @@ export default {
 .video-width iframe {
   max-height: 200px;
   width: 100% !important;
+}
+.ql-toolbar.ql-snow {
+  margin: 0;
 }
 </style>

@@ -16,6 +16,8 @@ export default defineNuxtConfig({
   shadcn: { prefix: "", componentDir: "./components/ui" },
   image: {
     format: ["webp"],
+    quality: 100,
+    domains: ["utfs.io"],
   },
   vite: {
     plugins: [tailwindcss()],

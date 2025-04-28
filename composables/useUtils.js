@@ -4,10 +4,10 @@ export const useUtils = () => {
   const { APP_NAME, BASE_URL } = config.public;
   const baseUrl = BASE_URL;
   const appName = APP_NAME;
-  const strSlug = (val) => {
+  const strSlug = (val, separator = "_") => {
     return val
       .toLowerCase()
-      .replace(/\s+/g, "_")
+      .replace(/\s+/g, separator)
       .replace(/[^\w-]/g, "");
   };
   const arrayConverter = (value) => {

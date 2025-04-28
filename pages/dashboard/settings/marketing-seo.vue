@@ -13,7 +13,7 @@
         <div class="grid md:grid-cols-2 gap-4">
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <img src="/icons/google.svg" />
+              <NuxtImg src="/icons/google.svg" />
               <div>
                 <p>Sitemaps for Search Engine</p>
                 <p class="text-xs">
@@ -43,7 +43,7 @@
           </div>
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <img src="/icons/facebook.svg" />
+              <NuxtImg src="/icons/facebook.svg" />
               <div>
                 <p>Facebook Data Feed</p>
                 <p class="text-xs">
@@ -73,7 +73,7 @@
           </div>
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <img src="/icons/gtm.svg" />
+              <NuxtImg src="/icons/gtm.svg" />
               <div>
                 <p>Google Tag Manager ID</p>
               </div>
@@ -90,7 +90,24 @@
           </div>
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <img src="/icons/pixel.svg" />
+              <NuxtImg src="/icons/analytics.svg" class="size-6" />
+              <div>
+                <p>Google Analytics ID</p>
+              </div>
+            </div>
+            <Skeleton v-if="initLoading" class="w-full h-4" />
+            <Input
+              id="analytics"
+              v-else
+              v-model="form.analytics"
+              type="text"
+              placeholder="Google Analytics ID"
+            />
+            <ErrorMessage name="analytics" :error="error" />
+          </div>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <NuxtImg src="/icons/pixel.svg" />
               <div>
                 <p>Facebook Pixel ID</p>
               </div>
@@ -107,7 +124,7 @@
           </div>
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <img src="/icons/pixel.svg" />
+              <NuxtImg src="/icons/pixel.svg" />
               <div>
                 <p>Facebook Pixel Access Token</p>
               </div>
@@ -122,9 +139,9 @@
             />
             <ErrorMessage name="pixelToken" :error="error" />
           </div>
-          <div class="space-y-2">
+          <div class="space-y-2 md:col-span-2">
             <div class="flex items-center gap-2">
-              <img src="/icons/pixel.svg" />
+              <NuxtImg src="/icons/pixel.svg" />
               <div>
                 <p>
                   Facebook Pixel Test Event ID
@@ -161,7 +178,7 @@ import { CopyIcon, ImageIcon, LoaderIcon } from "lucide-vue-next";
 import { toast } from "vue-sonner";
 
 export default {
-  name: "StoreSettings",
+  name: "MarketingSEOSettings",
   components: {
     CopyIcon,
     QRCode,
@@ -175,6 +192,7 @@ export default {
         pixelID: "",
         pixelToken: "",
         pixelEventID: "",
+        analytics: "",
       },
       error: {},
       loading: false,

@@ -1,7 +1,8 @@
 <template>
   <Head><title>Payment - Settings</title></Head>
-  <Dashboard
-    ><Tabs v-model="activeTab" class="w-full">
+  <Dashboard>
+    <h2 class="text-2xl font-bold">Payment Integration Settings</h2>
+    <Tabs v-model="activeTab" class="w-full mt-2">
       <TabsList class="w-full flex gap-2">
         <TabsTrigger v-for="tab in tabs" :value="tab" class="flex-1">
           {{ tab }}
