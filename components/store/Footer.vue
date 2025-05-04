@@ -1,6 +1,6 @@
 <template>
-  <section class="bg-[#F2F0F1] px-4 lg:px-0 mt-40 lg:mt-24">
-    <div class="container mx-auto -mt-28 lg:-mt-14">
+  <section class="bg-gray-100 px-4 lg:px-0 py-10">
+    <div class="container mx-auto">
       <div
         class="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-20"
       >
@@ -194,7 +194,7 @@
       </div>
       <hr class="lg:my-10 my-4" />
       <div
-        class="flex flex-col lg:flex-row justify-between items-center pb-16 gap-4 px-0"
+        class="flex flex-col lg:flex-row justify-between items-center gap-4 px-0"
       >
         <p class="text-black/60 text-sm lg:text-base">
           Shop.co © {{ new Date().getFullYear() }}. Developed by

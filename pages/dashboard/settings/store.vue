@@ -58,7 +58,10 @@
               <ErrorMessage name="email" :error="error" />
             </div>
             <div class="space-y-2">
-              <Label for="phone">Store phone</Label>
+              <Label for="phone"
+                >Store phone
+                <span class="text-xs">(ex: 01712345678)</span></Label
+              >
               <Skeleton v-if="initLoading" class="w-full h-4" />
               <Input id="phone" v-model="form.phone" type="tel" v-else />
               <ErrorMessage name="phone" :error="error" />

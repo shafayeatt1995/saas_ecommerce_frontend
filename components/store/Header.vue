@@ -12,7 +12,7 @@
             />
           </NuxtLink>
           <ul class="gap-6 hidden md:flex">
-            <li>
+            <!-- <li>
               <NuxtLink
                 :to="{
                   name: 'store-storeid-category',
@@ -21,16 +21,26 @@
                 class="hover:underline"
                 >Category</NuxtLink
               >
-            </li>
+            </li> -->
             <li>
               <NuxtLink
                 :to="{
-                  name: 'store-storeid-products',
+                  name: 'store-storeid-product',
                   params: { storeid: store.id },
                 }"
                 class="hover:underline"
                 >Products</NuxtLink
               >
+            </li>
+            <li>
+              <NuxtLink
+                :to="{
+                  name: 'store-storeid-product',
+                  params: { storeid: store.id },
+                }"
+                class="hover:underline"
+                >My Order
+              </NuxtLink>
             </li>
           </ul>
         </div>

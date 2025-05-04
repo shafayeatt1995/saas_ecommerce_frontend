@@ -19,7 +19,7 @@
             <p class="text-3xl font-bold">All Products</p>
           </NuxtLink>
           <NuxtLink
-            v-for="(category, index) in categories.categories"
+            v-for="(category, index) in categories?.categories"
             :key="index"
             :to="{
               name: 'store-storeid-category',

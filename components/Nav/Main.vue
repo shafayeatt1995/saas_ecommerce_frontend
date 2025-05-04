@@ -146,6 +146,11 @@ export default {
           icon: Grid2x2Plus,
         },
         {
+          name: "Sub-Category",
+          url: "/dashboard/sub-category",
+          icon: Grid2x2Plus,
+        },
+        {
           name: "Product",
           url: "/dashboard/product",
           icon: Package,

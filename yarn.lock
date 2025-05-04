@@ -3534,6 +3534,24 @@ electron-to-chromium@^1.5.73:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.139.tgz#56ae7d42439e2967a54badbadaeb12f748987f37"
   integrity sha512-GGnRYOTdN5LYpwbIr0rwP/ZHOQSvAF6TG0LSzp28uCBb9JiXHJGmaaKw29qjNJc5bGnnp6kXJqRnGMQoELwi5w==
 
+embla-carousel-reactive-utils@8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/embla-carousel-reactive-utils/-/embla-carousel-reactive-utils-8.6.0.tgz#607f1d8ab9921c906a555c206251b2c6db687223"
+  integrity sha512-fMVUDUEx0/uIEDM0Mz3dHznDhfX+znCCDCeIophYb1QGVM7YThSWX+wz11zlYwWFOr74b4QLGg0hrGPJeG2s4A==
+
+embla-carousel-vue@^8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/embla-carousel-vue/-/embla-carousel-vue-8.6.0.tgz#ef70e8f49c8a04e502a9b3de45ab6ecc8247f50b"
+  integrity sha512-v8UO5UsyLocZnu/LbfQA7Dn2QHuZKurJY93VUmZYP//QRWoCWOsionmvLLAlibkET3pGPs7++03VhJKbWD7vhQ==
+  dependencies:
+    embla-carousel "8.6.0"
+    embla-carousel-reactive-utils "8.6.0"
+
+embla-carousel@8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/embla-carousel/-/embla-carousel-8.6.0.tgz#abcedff2bff36992ea8ac27cd30080ca5b6a3f58"
+  integrity sha512-SjWyZBHJPbqxHOzckOfo8lHisEaJWmwd23XppYFYVh10bU66/Pn5tkVkbkCMZVdbUE5eTCI2nD8OyIP4Z+uwkA==
+
 emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
@@ -7898,6 +7916,13 @@ vue-eslint-parser@^10.1.1:
     lodash "^4.17.21"
     semver "^7.6.3"
 
+vue-image-zoomer@^2.4.4:
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/vue-image-zoomer/-/vue-image-zoomer-2.4.4.tgz#781355c07ad249973d6907784dfb1214ba73976a"
+  integrity sha512-hCDgBEitR/8m4/yDcgTWi5elR40Si2TATaYcpSh0395NpQ1LoHCFXizeXxp2MoYHzO3BpO3T4Q8+SNco/UITlg==
+  dependencies:
+    vue "^3.2.25"
+
 vue-router@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.5.0.tgz#58fc5fe374e10b6018f910328f756c3dae081f14"
@@ -7915,7 +7940,7 @@ vue-sonner@^1.3.2:
   resolved "https://registry.yarnpkg.com/vue-sonner/-/vue-sonner-1.3.2.tgz#3349d548218e074499fc6d1ba394603ba477156a"
   integrity sha512-UbZ48E9VIya3ToiRHAZUbodKute/z/M1iT8/3fU8zEbwBRE11AKuHikssv18LMk2gTTr6eMQT4qf6JoLHWuj/A==
 
-vue@^3.5.13:
+vue@^3.2.25, vue@^3.5.13:
   version "3.5.13"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.5.13.tgz#9f760a1a982b09c0c04a867903fc339c9f29ec0a"
   integrity sha512-wmeiSMxkZCSc+PM2w2VRsOYAZC8GdipNFRTsLSfodVqI9mbejKeXEGr8SckuLnrQPGe3oJN5c3K0vpoU9q/wCQ==

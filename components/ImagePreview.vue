@@ -1,5 +1,11 @@
 <template>
-  <viewer ref="viewer" :images="images" class="viewer hidden" @inited="inited">
+  <viewer
+    ref="viewer"
+    :images="images"
+    class="viewer hidden"
+    @inited="inited"
+    @hide="images = []"
+  >
     <template #default="scope">
       <NuxtImg v-for="src in scope.images" :key="src" :src="src" />
       {{ scope.options }}
@@ -35,7 +41,7 @@ export default {
       this.$viewer = viewer;
     },
     previewImage(urls) {
-      this.images = [...urls];
+      this.images = [...new Set(urls)];
       this.$viewer.show();
     },
   },

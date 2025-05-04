@@ -1,42 +1,46 @@
 <template>
   <Head>
-    <title>{{ store.name }}</title>
+    <title>Welcome to {{ store.name }}</title>
     <meta name="keywords" content="store, products, categories" />
     <meta name="description" :content="store.description" />
   </Head>
   <Store>
-    <section class="py-12" v-for="(category, i) in data.items" :key="i">
-      <div class="container mx-auto px-4 lg:px-0">
-        <h2 class="font-bold text-5xl text-center">
-          {{ category.name }}
-        </h2>
-        <div class="overflow-x-auto py-5">
-          <div
-            class="flex lg:grid lg:grid-cols-4 gap-5 whitespace-nowrap scrollbar-thin scrollbar-track-rounded-lg scrollbar-thumb-rounded-lg scrollbar-thumb-gray-300 mr-4"
-          >
-            <ProductCard
-              v-for="(product, key) in category.products"
-              :key="key"
-              :product="product"
-            />
+    <template v-for="(category, i) in data.items" :key="i">
+      <section class="py-12">
+        <div class="container mx-auto px-4 lg:px-0">
+          <h2 class="font-bold text-5xl text-center">
+            {{ category.name }}
+          </h2>
+          <div class="overflow-x-auto py-5">
+            <div
+              class="flex lg:grid md:grid-cols-3 lg:grid-cols-5 gap-5 whitespace-nowrap scrollbar-thin scrollbar-track-rounded-lg scrollbar-thumb-rounded-lg scrollbar-thumb-gray-300 mr-4"
+            >
+              <template v-if="data.products[i]">
+                <ProductCard
+                  v-for="(product, key) in data.products[i]"
+                  :key="key"
+                  :product="product"
+                />
+              </template>
+            </div>
+          </div>
+          <div class="flex justify-center mt-9">
+            <NuxtLink
+              :to="{
+                name: 'store-storeid-category',
+                params: { storeid: store.id },
+                query: { categoryID: category.id },
+              }"
+              class="px-20 mt-3 !text-base !rounded-full !py-6"
+              :class="cn(buttonVariants({ variant: 'outline' }))"
+            >
+              View All
+            </NuxtLink>
           </div>
         </div>
-        <div class="flex justify-center mt-9">
-          <NuxtLink
-            :to="{
-              name: 'store-storeid-category-categoryid',
-              params: { storeid: store.id, categoryid: category.id },
-            }"
-            class="py-3 px-20 rounded-full border w-full lg:w-auto"
-          >
-            View All
-          </NuxtLink>
-        </div>
-      </div>
-    </section>
-    <section class="container mx-auto">
+      </section>
       <hr />
-    </section>
+    </template>
     <!-- <section class="lg:py-16 py-12">
       <div class="container mx-auto px-4 lg:px-0">
         <h2 class="font-bold text-5xl text-center lg:pb-14 py-8">
@@ -80,22 +84,19 @@
 </template>
 
 <script>
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 export default {
   name: "Store",
   async setup() {
     try {
-      const page = 1;
-      const perPage = 24;
       const { store } = useFrontend();
       const { api } = useApi();
       const { data } = await useAsyncData(
-        `product-${store.value.id}`,
+        `home-${store.value.id}`,
         async () =>
-          await api.get("/store/fetch-home", {
-            storeID: store.value._id,
-            page,
-            perPage,
-          })
+          await api.get("/store/fetch-home", { storeID: store.value._id })
       );
       return { data };
     } catch (error) {
@@ -108,6 +109,10 @@ export default {
       const { store } = useFrontend();
       return store.value;
     },
+  },
+  methods: {
+    cn,
+    buttonVariants,
   },
 };
 </script>
