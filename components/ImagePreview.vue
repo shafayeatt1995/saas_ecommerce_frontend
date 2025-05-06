@@ -7,7 +7,7 @@
     @hide="images = []"
   >
     <template #default="scope">
-      <NuxtImg v-for="src in scope.images" :key="src" :src="src" />
+      <img v-for="src in scope.images" :key="src" :src="src" />
       {{ scope.options }}
     </template>
   </viewer>

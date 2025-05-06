@@ -11,8 +11,8 @@
       >
       <span> {{ editMode ? "Update" : "Create" }} Product </span>
     </h1>
-    <div class="grid grid-cols-1 xl:grid-cols-3 my-3 w-full gap-5">
-      <div class="col-span-2 space-y-5">
+    <div class="grid grid-cols-1 xl:grid-cols-3 my-3 w-full gap-4">
+      <div class="col-span-2 space-y-4">
         <div class="bg-white p-4 shadow-md rounded-xl space-y-2 border">
           <h2 class="text-2xl font-bold mb-2">Product basic info</h2>
           <div class="space-y-4">
@@ -319,7 +319,7 @@
           </div>
         </div>
       </div>
-      <div class="col-span-1 space-y-5">
+      <div class="col-span-1 space-y-4">
         <div class="bg-white p-4 shadow-md rounded-xl border">
           <h2 class="text-2xl font-bold mb-2">Product status</h2>
           <Select v-model="form.status">
@@ -353,26 +353,47 @@
         <div class="bg-white p-4 shadow-md rounded-xl border">
           <h2 class="text-2xl font-bold mb-2">Product Category</h2>
           <div class="space-y-2">
-            <div>
-              <Select v-model="form.categoryIDs" multiple>
-                <SelectTrigger class="w-full">
-                  <SelectValue placeholder="Select product category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Select Product Category</SelectLabel>
-                    <SelectItem
-                      v-for="(category, i) in categories"
-                      :key="i"
-                      :value="category._id"
-                    >
-                      {{ category.name }}
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <ErrorMessage name="categoryID" :error="error" />
-            </div>
+            <Select v-model="form.categoryIDs" multiple>
+              <SelectTrigger class="w-full">
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select Category</SelectLabel>
+                  <SelectItem
+                    v-for="(category, i) in categories"
+                    :key="i"
+                    :value="category._id"
+                  >
+                    {{ category.name }}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <ErrorMessage name="categoryID" :error="error" />
+            <Select v-model="form.subCategoryIDs" multiple>
+              <SelectTrigger class="w-full">
+                <SelectValue placeholder="Select sub category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select Sub Category</SelectLabel>
+                  <SelectItem
+                    v-for="(subCategory, i) in subCategories"
+                    :key="i"
+                    :value="subCategory._id"
+                  >
+                    <p>
+                      {{ subCategory.name }}
+                      <span class="text-[10px]"
+                        >({{ subCategory.category.name }})</span
+                      >
+                    </p>
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <ErrorMessage name="subCategoryID" :error="error" />
           </div>
         </div>
         <div class="bg-white p-4 shadow-md rounded-xl border">
@@ -474,6 +495,7 @@ export default {
       showMaterial: false,
       form: {
         categoryIDs: [],
+        subCategoryIDs: [],
         name: "",
         slug: "",
         price: 0,
@@ -493,6 +515,7 @@ export default {
       error: {},
       variation: "",
       categories: [],
+      subCategories: [],
       thumbnailModal: false,
       galleryModal: false,
       loading: false,
@@ -548,6 +571,12 @@ export default {
       const { strSlug } = useUtils();
       if (!this.initLoad) this.form.slug = strSlug(value, "-");
     },
+    "form.categoryIDs"() {
+      this.fetchSubCategory();
+    },
+    subCategories() {
+      if (!this.initLoad) this.resetSubCategory();
+    },
   },
   mounted() {
     this.trigger();
@@ -555,6 +584,7 @@ export default {
       this.fetchProduct();
     } else {
       this.fetchCategory();
+      this.fetchSubCategory();
       this.initLoad = false;
     }
     this.interval = setInterval(() => {
@@ -573,6 +603,7 @@ export default {
         });
         this.form = item;
         await this.fetchCategory();
+        await this.fetchSubCategory();
         this.selectVariations = item.variation.map(() => 0);
         this.initLoad = false;
       } catch (error) {
@@ -596,6 +627,21 @@ export default {
         this.categories = items;
       } catch (error) {
         console.error(error);
+      }
+    },
+    async fetchSubCategory() {
+      try {
+        const { api } = useApi();
+        const { subCategoryIDs, categoryIDs } = this.form;
+        const { items } = await api.post2("/dashboard/product/sub-category", {
+          subCategoryIDs: subCategoryIDs || [],
+          categoryIDs: categoryIDs || [],
+        });
+        this.subCategories = items;
+        return items;
+      } catch (error) {
+        console.error(error);
+        return [];
       }
     },
     addVariation() {
@@ -666,6 +712,11 @@ export default {
     },
     setVariant(key, index) {
       this.selectVariations[key] = index;
+    },
+    resetSubCategory() {
+      this.form.subCategoryIDs = this.subCategories
+        .map(({ _id }) => _id)
+        .filter((id) => this.form.subCategoryIDs.includes(id));
     },
   },
 };

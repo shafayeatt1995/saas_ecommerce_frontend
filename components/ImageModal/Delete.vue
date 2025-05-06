@@ -34,7 +34,7 @@
               >
                 <CheckCircleIcon :size="30" />
               </div>
-              <NuxtImg :src="image.url" class="size-full object-contain" />
+              <img :src="image.url" class="size-full object-contain" />
             </button>
             <p class="mt-1 text-center truncate flex-1">{{ image.name }}</p>
             <p class="text-center">({{ showSize(image.size) }})</p>

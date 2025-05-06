@@ -4,11 +4,13 @@ export const useUtils = () => {
   const { APP_NAME, BASE_URL } = config.public;
   const baseUrl = BASE_URL;
   const appName = APP_NAME;
-  const strSlug = (val, separator = "_") => {
+  const strSlug = (val, separator = "-") => {
     return val
       .toLowerCase()
       .replace(/\s+/g, separator)
-      .replace(/[^\w-]/g, "");
+      .replace(/[^\w\-]+/g, "")
+      .replace(new RegExp(`${separator}{2,}`, "g"), separator)
+      .replace(new RegExp(`^${separator}|${separator}$`, "g"), "");
   };
   const arrayConverter = (value) => {
     return Array.isArray(value) ? value : value ? [value] : [];

@@ -22,7 +22,7 @@
                     @click="checkSortable ? $emit('sorted', field) : null"
                   >
                     <slot :name="field.key + '-label'">
-                      <NuxtImg
+                      <img
                         v-if="field.title_image"
                         loading="lazy"
                         :src="field.title_image"
