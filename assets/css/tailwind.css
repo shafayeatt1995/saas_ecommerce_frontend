@@ -146,4 +146,12 @@
     transform: translateY(-10px);
     opacity: 0;
   }
+  .slide-enter-active,
+  .slide-leave-active {
+    transition: all 0.2s ease;
+  }
+  .slide-enter-from,
+  .slide-leave-to {
+    transform: translateX(100%);
+  }
 }

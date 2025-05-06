@@ -20,7 +20,7 @@
             />
           </div>
           <div
-            class="w-full flex justify-center items-center mb-3 lg:col-span-4 xl:col-span-3 lg:row-span-3 xl:row-span-4 relative max-h-[500px]"
+            class="w-full flex justify-center items-center lg:col-span-4 xl:col-span-3 lg:row-span-3 xl:row-span-4 relative max-h-[500px]"
           >
             <VueImageZoomer
               v-if="mainImage"
@@ -110,6 +110,7 @@
                 variant="outline"
                 class="flex-1 py-7 rounded-full text-base"
                 :disabled="outOfStock"
+                @click="addToCart"
               >
                 <ShoppingCartIcon />
                 Add to Cart
@@ -228,6 +229,7 @@ import {
 } from "lucide-vue-next";
 import { VueImageZoomer } from "vue-image-zoomer";
 import "vue-image-zoomer/dist/style.css";
+import { toast } from "vue-sonner";
 
 export default {
   name: "Products",
@@ -369,6 +371,26 @@ export default {
     previewImage() {
       const images = [...new Set([this.mainImage, ...this.images])];
       eventBus.emit("previewImage", images);
+    },
+    addToCart() {
+      if (
+        this.selectVariationDetails.length ===
+        this.data?.product?.variation.length
+      ) {
+        const { addToCart } = useCart();
+        const { _id, name, price, discountPrice, discountStatus, thumbnail } =
+          this.data?.product;
+        addToCart({
+          variation: this.selectVariationDetails,
+          _id,
+          name,
+          price,
+          discountPrice: discountStatus ? discountPrice : 0,
+          thumbnail,
+          quantity: this.quantity,
+        });
+        toast.success("Product added to cart");
+      }
     },
   },
 };

@@ -62,15 +62,24 @@
               </a>
             </li>
             <li>
-              <a href="#">
-                <ShoppingCartIcon />
-              </a>
+              <button @click="toggleCart" class="relative">
+                <ShoppingCartIcon :size="26" />
+                <ClientOnly>
+                  <p
+                    v-if="items && items.length > 0"
+                    class="absolute -top-3 -right-3 bg-red-500 text-white size-5 flex items-center justify-center rounded-full text-xs"
+                  >
+                    {{ items.length }}
+                  </p>
+                </ClientOnly>
+              </button>
             </li>
           </ul>
         </div>
       </div>
     </div>
   </section>
+  <Cart />
 </template>
 
 <script>
@@ -93,6 +102,16 @@ export default {
     store() {
       const { store } = useFrontend();
       return store.value;
+    },
+    items() {
+      const { cart } = useCart();
+      return cart.value.items || [];
+    },
+  },
+  methods: {
+    toggleCart() {
+      const { cart } = useCart();
+      cart.value.showCart = !cart.value.showCart;
     },
   },
 };
