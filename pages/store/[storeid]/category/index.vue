@@ -31,7 +31,7 @@
               'border-primary': categoryID == category.id,
             }"
           >
-            <NuxtImg
+            <img
               :src="category.image"
               :alt="category.name"
               class="w-full h-full object-cover"
@@ -198,7 +198,6 @@ export default {
   },
   watch: {
     $route(val) {
-      console.log(val.query.page);
       this.page = +val.query.page || 1;
       this.perPage = +val.query.perPage || 24;
     },

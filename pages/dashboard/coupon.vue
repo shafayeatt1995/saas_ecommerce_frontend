@@ -105,7 +105,7 @@
     </div>
   </Dashboard>
   <Dialog v-model:open="open">
-    <DialogContent class="max-w-lg">
+    <DialogScrollContent class="max-w-lg">
       <DialogHeader>
         <DialogTitle>{{ editMode ? "Edit" : "Add" }} Coupon</DialogTitle>
       </DialogHeader>
@@ -255,12 +255,13 @@
           {{ editMode ? "Update" : "Create" }} coupon
         </Button>
       </DialogFooter>
-    </DialogContent>
+    </DialogScrollContent>
   </Dialog>
   <ImageModal v-model="form.image" v-model:open="imageModal" />
 </template>
 
 <script>
+import { parseDate } from "@internationalized/date";
 import VueSlideUpDown from "vue-slide-up-down";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -367,7 +368,10 @@ export default {
       }
     },
     "form.maxDiscount"(val) {
-      if (!val) this.form.maxDiscountAmount = "";
+      if (!val) this.form.maxDiscountAmount = 0;
+    },
+    "form.minPurchase"(val) {
+      if (!val) this.form.minPurchaseAmount = 0;
     },
   },
   mounted() {
@@ -418,8 +422,11 @@ export default {
         this.loading = false;
       }
     },
-    async editCoupon(item) {
-      this.form = { ...item };
+    editCoupon(item) {
+      this.form = {
+        ...item,
+        expireDate: parseDate(item.expireDate.split("T")[0]),
+      };
       this.editMode = true;
       this.open = true;
     },
@@ -451,11 +458,11 @@ export default {
         day: "numeric",
       }).format(new Date(value));
     },
-    async updateStatus(name) {
+    async updateStatus(item) {
       try {
         this.loading = true;
         const { api } = useApi();
-        await api.post("/dashboard/coupon/toggle-status", { name });
+        await api.post("/dashboard/coupon/toggle-status", item);
         toast.success("Status changed successfully");
       } catch (error) {
         console.error(error);

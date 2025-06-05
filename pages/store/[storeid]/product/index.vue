@@ -1,5 +1,7 @@
 <template>
-  <Head> </Head>
+  <Head>
+    <title>Products - {{ store.name }}</title>
+  </Head>
   <Store>
     <section class="container mx-auto px-4 lg:px-0 py-10">
       <div class="mb-5 overflow-x-auto">
@@ -31,7 +33,7 @@
               'border-primary': categoryID == category.id,
             }"
           >
-            <NuxtImg
+            <img
               :src="category.image"
               :alt="category.name"
               class="w-full h-full object-cover"
@@ -45,9 +47,11 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 lg:grid-cols-5 gap-5">
+      <div
+        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 lg:gap-5 gap-2"
+      >
         <ProductCard
-          v-for="(product, i) in pending ? 12 : data?.products"
+          v-for="(product, i) in pending ? 12 : data?.products || []"
           :key="i"
           :product="product"
           :loading="pending"
@@ -84,7 +88,7 @@
                     :variant="item.value === page ? 'default' : 'outline'"
                     @click="paginateUrl(item.value)"
                   >
-                    {{ item.value }} {{ page }}
+                    {{ item.value }}
                   </Button>
                 </PaginationListItem>
                 <PaginationEllipsis v-else :key="item.type" :index="index" />
@@ -198,7 +202,6 @@ export default {
   },
   watch: {
     $route(val) {
-      console.log(val.query.page);
       this.page = +val.query.page || 1;
       this.perPage = +val.query.perPage || 24;
     },

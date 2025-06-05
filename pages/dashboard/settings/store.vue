@@ -154,7 +154,7 @@
               v-else
               class="w-full flex justify-center items-center relative max-h-28"
             >
-              <NuxtImg
+              <img
                 :src="form.logo"
                 class="w-full h-28 object-contain drop-shadow-xl rounded-lg"
               />

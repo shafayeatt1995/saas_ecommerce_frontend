@@ -275,7 +275,7 @@
                   size="icon"
                   @click="removeOption(key, index)"
                 >
-                  <XIcon class="text-red-500 text-xl" />
+                  <XIcon class="text-rose-500 text-xl" />
                 </Button>
               </div>
             </div>
@@ -407,7 +407,7 @@
               v-else
               class="w-full flex justify-center items-center relative max-h-28"
             >
-              <NuxtImg
+              <img
                 :src="form.thumbnail"
                 class="w-full h-28 object-contain drop-shadow-xl rounded-lg"
               />
@@ -431,7 +431,7 @@
                 :key="i"
                 class="relative max-h-28"
               >
-                <NuxtImg
+                <img
                   :src="image"
                   class="size-full object-contain drop-shadow-xl rounded-lg"
                 />

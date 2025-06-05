@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="flex-1 flex justify-end">
-        <NuxtImg src="/404.svg" class="w-full" alt="404" />
+        <img src="/404.svg" class="w-full" alt="404" />
       </div>
     </div>
   </div>

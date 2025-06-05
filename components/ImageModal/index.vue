@@ -1,6 +1,6 @@
 <template>
   <Dialog :open="open">
-    <DialogContent class="max-w-4xl p-2 md:p-5 rounded-xl" hideClose>
+    <DialogScrollContent class="max-w-4xl p-2 md:p-5 rounded-xl" hideClose>
       <DialogHeader>
         <DialogTitle class="flex justify-between items-center">
           <p>Images</p>
@@ -39,7 +39,7 @@
         </DialogDescription>
       </DialogHeader>
       <KeyTrigger eventKey="Escape" @action="$emit('close')" />
-    </DialogContent>
+    </DialogScrollContent>
   </Dialog>
 </template>
 

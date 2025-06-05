@@ -1,16 +1,12 @@
 <template>
   <Dialog v-if="!loggedIn" :open="open" @update:open="open = false">
-    <DialogContent>
+    <DialogScrollContent>
       <DialogTitle />
       <div>
         <h1 class="text-3xl font-bold text-center">Sign in to your account</h1>
         <div class="flex flex-col gap-2 my-4">
           <Button @click="socialLogin">
-            <NuxtImg
-              src="/images/google.svg"
-              alt="google"
-              class="size-5 mr-2"
-            />
+            <img src="/images/google.svg" alt="google" class="size-5 mr-2" />
 
             Sign in with google
           </Button>
@@ -20,7 +16,7 @@
           in seconds.
         </p>
       </div>
-    </DialogContent>
+    </DialogScrollContent>
   </Dialog>
 </template>
 

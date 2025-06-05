@@ -46,7 +46,7 @@
             {{ data?.product?.name }}
           </h1>
           <div class="pb-3 text-2xl font-bold">
-            <p v-if="outOfStock" class="text-red-500">Out of Stock</p>
+            <p v-if="outOfStock" class="text-rose-500">Out of Stock</p>
             <div
               class="flex items-center gap-2.5"
               v-else-if="
@@ -248,11 +248,11 @@ export default {
       const { store } = useFrontend();
       const { api } = useApi();
       const { data } = await useAsyncData(
-        `product-${params.productSlug}`,
+        `product-${params.slug}`,
         async () =>
           await api.get("/store/fetch-product", {
             storeID: store.value._id,
-            productSlug: params.productSlug,
+            slug: params.slug,
           })
       );
       return { data };
@@ -325,11 +325,13 @@ export default {
     },
   },
   created() {
-    if (!this.data?.product) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: "Product Not Found",
-      });
+    if (typeof window == "undefined") {
+      if (!this.data?.product) {
+        throw createError({
+          statusCode: 404,
+          statusMessage: "Product Not Found",
+        });
+      }
     }
   },
   mounted() {
@@ -378,16 +380,9 @@ export default {
         this.data?.product?.variation.length
       ) {
         const { addToCart } = useCart();
-        const { _id, name, price, discountPrice, discountStatus, thumbnail } =
-          this.data?.product;
         addToCart({
+          ...this.data?.product,
           variation: this.selectVariationDetails,
-          _id,
-          name,
-          price,
-          discountPrice: discountStatus ? discountPrice : 0,
-          thumbnail,
-          quantity: this.quantity,
         });
         toast.success("Product added to cart");
       }

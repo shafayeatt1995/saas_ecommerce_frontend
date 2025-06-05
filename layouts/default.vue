@@ -9,6 +9,12 @@
 <script>
 export default {
   name: "DefaultLayout",
+  watch: {
+    $route() {
+      const { cart } = useCart();
+      cart.value.showCart = false;
+    },
+  },
   mounted() {
     const { value } = useData();
     value.isTablet = window.innerWidth < 1024;

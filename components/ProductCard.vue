@@ -1,14 +1,14 @@
 <template>
   <div
     v-if="product"
-    class="max-w-52 lg:max-w-none flex-shrink-0 border rounded-2xl overflow-hidden"
+    class="w-full flex-shrink-0 border rounded-2xl overflow-hidden"
   >
     <Skeleton v-if="loading" class="w-full aspect-square" />
     <NuxtLink
       v-else
       :to="{
-        name: 'store-storeid-product-productSlug',
-        params: { storeid: store.id, productSlug: product.slug },
+        name: 'store-storeid-product-slug',
+        params: { storeid: store?.id, slug: product?.slug },
       }"
     >
       <img
@@ -22,14 +22,14 @@
       <NuxtLink
         v-else
         :to="{
-          name: 'store-storeid-product-productSlug',
-          params: { storeid: store.id, productSlug: product.slug },
+          name: 'store-storeid-product-slug',
+          params: { storeid: store?.id, slug: product?.slug },
         }"
-        class="block break-words line-clamp-2 leading-tight font-semibold"
+        class="block break-words line-clamp-2 leading-tight text-sm md:text-base"
       >
         {{ product.name }}
       </NuxtLink>
-      <div class="flex items-center font-bold">
+      <div class="flex items-center text-sm md:text-base">
         <Skeleton v-if="loading" class="w-1/2 h-5" />
         <p
           v-else-if="product.discountStatus"
@@ -44,11 +44,12 @@
       </div>
       <div class="flex justify-center">
         <NuxtLink
+          v-if="product?.slug"
           :to="{
-            name: 'store-storeid-product-productSlug',
-            params: { storeid: store.id, productSlug: product.slug },
+            name: 'store-storeid-product-slug',
+            params: { storeid: store?.id, slug: product?.slug },
           }"
-          class="px-10 mt-3 !text-base !rounded-full !py-5"
+          class="w-full mt-3 !text-base !rounded-full !py-5"
           :class="cn(buttonVariants({ variant: 'default' }))"
           >View Product</NuxtLink
         >

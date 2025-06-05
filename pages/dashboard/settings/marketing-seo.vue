@@ -13,7 +13,7 @@
         <div class="grid md:grid-cols-2 gap-4">
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <NuxtImg src="/icons/google.svg" />
+              <img src="/icons/google.svg" />
               <div>
                 <p>Sitemaps for Search Engine</p>
                 <p class="text-xs">
@@ -43,7 +43,7 @@
           </div>
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <NuxtImg src="/icons/facebook.svg" />
+              <img src="/icons/facebook.svg" />
               <div>
                 <p>Facebook Data Feed</p>
                 <p class="text-xs">
@@ -73,7 +73,7 @@
           </div>
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <NuxtImg src="/icons/gtm.svg" />
+              <img src="/icons/gtm.svg" />
               <div>
                 <p>Google Tag Manager ID</p>
               </div>
@@ -90,7 +90,7 @@
           </div>
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <NuxtImg src="/icons/analytics.svg" class="size-6" />
+              <img src="/icons/analytics.svg" class="size-6" />
               <div>
                 <p>Google Analytics ID</p>
               </div>
@@ -107,7 +107,7 @@
           </div>
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <NuxtImg src="/icons/pixel.svg" />
+              <img src="/icons/pixel.svg" />
               <div>
                 <p>Facebook Pixel ID</p>
               </div>
@@ -124,7 +124,7 @@
           </div>
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <NuxtImg src="/icons/pixel.svg" />
+              <img src="/icons/pixel.svg" />
               <div>
                 <p>Facebook Pixel Access Token</p>
               </div>
@@ -141,7 +141,7 @@
           </div>
           <div class="space-y-2 md:col-span-2">
             <div class="flex items-center gap-2">
-              <NuxtImg src="/icons/pixel.svg" />
+              <img src="/icons/pixel.svg" />
               <div>
                 <p>
                   Facebook Pixel Test Event ID

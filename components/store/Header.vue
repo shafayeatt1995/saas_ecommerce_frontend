@@ -5,7 +5,7 @@
         <div class="flex flex-1 items-center gap-10">
           <MenuIcon :size="26" class="cursor-pointer lg:hidden" />
           <NuxtLink :to="`/store/${store.id}`">
-            <NuxtImg
+            <img
               :src="store.logo"
               class="max-w-40 max-h-16 object-contain"
               :alt="store.name"
@@ -67,7 +67,7 @@
                 <ClientOnly>
                   <p
                     v-if="items && items.length > 0"
-                    class="absolute -top-3 -right-3 bg-red-500 text-white size-5 flex items-center justify-center rounded-full text-xs"
+                    class="absolute -top-3 -right-3 bg-rose-500 text-white size-5 flex items-center justify-center rounded-full text-xs"
                   >
                     {{ items.length }}
                   </p>

@@ -24,7 +24,7 @@
           </div>
         </template>
         <template #thumbnail="{ value }">
-          <NuxtImg :src="value" class="w-full max-h-20 object-contain" />
+          <img :src="value" class="w-full max-h-20 object-contain" />
         </template>
         <template #stock="{ value }">
           <Badge variant="success" v-if="value">In Stock</Badge>

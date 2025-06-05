@@ -25,18 +25,18 @@
             </CardHeader>
             <CardContent class="space-y-4">
               <div class="space-y-2">
-                <Label for="status">Cash on Delivery status </Label>
-                <Select id="status" v-model="codForm.status">
-                  <SelectTrigger class="w-full">
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem :value="true"> Activate </SelectItem>
-                      <SelectItem :value="false"> Deactivate </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <div class="flex justify-between items-center">
+                  <Label for="status" class="gap-0"
+                    >Cash on Delivery status [<span
+                      :class="
+                        codForm.status ? 'text-green-500' : 'text-red-500'
+                      "
+                      >{{ codForm.status ? "Active" : "Deactivated" }}</span
+                    >
+                    ]</Label
+                  >
+                  <Switch id="status" v-model="codForm.status" />
+                </div>
                 <ErrorMessage name="status" :error="error" />
               </div>
               <div class="space-y-2">
@@ -86,19 +86,17 @@
             </CardHeader>
             <CardContent>
               <div class="space-y-4">
-                <div class="space-y-2">
-                  <Label for="status">bKash status </Label>
-                  <Select id="status" v-model="bkashForm.status">
-                    <SelectTrigger class="w-full">
-                      <SelectValue placeholder="Select a status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem :value="true"> Activate </SelectItem>
-                        <SelectItem :value="false"> Deactivate </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                <div class="flex justify-between items-center">
+                  <Label for="status" class="gap-0"
+                    >bKash status [<span
+                      :class="
+                        bkashForm.status ? 'text-green-500' : 'text-red-500'
+                      "
+                      >{{ bkashForm.status ? "Active" : "Deactivated" }}</span
+                    >
+                    ]</Label
+                  >
+                  <Switch id="status" v-model="bkashForm.status" />
                   <ErrorMessage name="status" :error="error" />
                 </div>
                 <div class="grid lg:grid-cols-2 gap-4">
@@ -193,6 +191,7 @@
                         </SlideUpDown>
                       </div>
                     </RadioGroup>
+                    <ErrorMessage name="type" :error="error" />
                   </CardContent>
                 </Card>
               </div>
@@ -251,7 +250,7 @@ export default {
       initLoading: true,
       loading: false,
       accept: false,
-      activeTab: "bKash",
+      activeTab: "Cash on Delivery",
       tabs: ["Cash on Delivery", "bKash", "Bank Transfer"],
       codForm: { message: "", status: true },
       item: null,
@@ -270,6 +269,7 @@ export default {
         { value: "delivery", label: "Delivery charge only" },
         { value: "percentage", label: "Percentage" },
         { value: "fixed", label: "Fixed" },
+        { value: "none", label: "No Payment" },
       ],
       error: {},
     };

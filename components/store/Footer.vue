@@ -5,7 +5,7 @@
         class="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-20"
       >
         <div class="w-full lg:max-w-80">
-          <!-- <NuxtImg src="/images/logo.png" alt="logo" class="max-w-40 max-h-6" /> -->
+          <!-- <img src="/images/logo.png" alt="logo" class="max-w-40 max-h-6" /> -->
           <p class="text-black/60 mt-6">
             We have clothes that suits your style and which you’re proud to
             wear. From women to men.
@@ -206,7 +206,7 @@
           </a>
         </p>
         <div class="px-10">
-          <!-- <NuxtImg
+          <!-- <img
             src="/images/payment.png"
             alt="payment"
             class="lg:h-10 w-full lg:w-auto"

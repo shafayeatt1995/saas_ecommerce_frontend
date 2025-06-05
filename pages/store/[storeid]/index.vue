@@ -72,7 +72,7 @@
             class="h-72 bg-white rounded-3xl overflow-hidden relative"
             :class="style.span === 1 ? 'lg:col-span-1' : 'lg:col-span-2'"
           >
-            <NuxtImg :src="style.img" class="w-full h-full object-cover" />
+            <img :src="style.img" class="w-full h-full object-cover" />
             <p class="absolute top-4 left-6 font-bold text-3xl xl">
               {{ style.name }}
             </p>

@@ -1,14 +1,14 @@
 <script setup>
-import { cn } from '@/lib/utils';
-import { X } from 'lucide-vue-next';
+import { cn } from "@/lib/utils";
+import { X } from "lucide-vue-next";
 import {
   DialogClose,
   DialogContent,
   DialogOverlay,
   DialogPortal,
   useForwardPropsEmits,
-} from 'reka-ui';
-import { computed } from 'vue';
+} from "reka-ui";
+import { computed } from "vue";
 
 const props = defineProps({
   forceMount: { type: Boolean, required: false },
@@ -17,14 +17,15 @@ const props = defineProps({
   asChild: { type: Boolean, required: false },
   as: { type: null, required: false },
   class: { type: null, required: false },
+  hideClose: { type: Boolean, default: false, required: false },
 });
 const emits = defineEmits([
-  'escapeKeyDown',
-  'pointerDownOutside',
-  'focusOutside',
-  'interactOutside',
-  'openAutoFocus',
-  'closeAutoFocus',
+  "escapeKeyDown",
+  "pointerDownOutside",
+  "focusOutside",
+  "interactOutside",
+  "openAutoFocus",
+  "closeAutoFocus",
 ]);
 
 const delegatedProps = computed(() => {
@@ -45,7 +46,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
         :class="
           cn(
             'relative z-50 grid w-full max-w-lg my-8 gap-4 border border-border bg-background p-6 shadow-lg duration-200 sm:rounded-lg md:w-full',
-            props.class,
+            props.class
           )
         "
         v-bind="forwarded"
@@ -65,6 +66,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
         <slot />
 
         <DialogClose
+          v-if="!props.hideClose"
           class="absolute top-4 right-4 p-0.5 transition-colors rounded-md hover:bg-secondary"
         >
           <X class="w-4 h-4" />

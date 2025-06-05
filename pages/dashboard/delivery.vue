@@ -79,7 +79,7 @@
     </div>
   </Dashboard>
   <Dialog v-model:open="open">
-    <DialogContent class="max-w-lg">
+    <DialogScrollContent class="max-w-lg">
       <DialogHeader>
         <DialogTitle>{{ editMode ? "Edit" : "Add" }} Delivery</DialogTitle>
       </DialogHeader>
@@ -110,7 +110,7 @@
           {{ editMode ? "Update" : "Create" }} delivery
         </Button>
       </DialogFooter>
-    </DialogContent>
+    </DialogScrollContent>
   </Dialog>
 </template>
 

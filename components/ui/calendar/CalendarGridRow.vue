@@ -1,21 +1,25 @@
-<script lang="ts" setup>
-import { cn } from '@/lib/utils'
-import { CalendarGridRow, type CalendarGridRowProps, useForwardProps } from 'reka-ui'
-import { computed, type HTMLAttributes } from 'vue'
+<script setup>
+import { reactiveOmit } from '@vueuse/core';
+import { CalendarGridRow, useForwardProps } from 'reka-ui';
+import { cn } from '@/lib/utils';
 
-const props = defineProps<CalendarGridRowProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps({
+  asChild: { type: Boolean, required: false },
+  as: { type: null, required: false },
+  class: { type: null, required: false },
+});
 
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+const delegatedProps = reactiveOmit(props, 'class');
 
-  return delegated
-})
-
-const forwardedProps = useForwardProps(delegatedProps)
+const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>
-  <CalendarGridRow :class="cn('flex', props.class)" v-bind="forwardedProps">
+  <CalendarGridRow
+    data-slot="calendar-grid-row"
+    :class="cn('flex', props.class)"
+    v-bind="forwardedProps"
+  >
     <slot />
   </CalendarGridRow>
 </template>

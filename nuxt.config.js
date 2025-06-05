@@ -11,14 +11,9 @@ export default defineNuxtConfig({
       API2_URL: process.env.API2_URL,
     },
   },
-  modules: ["@nuxt/eslint", "@nuxt/fonts", "@nuxt/image", "shadcn-nuxt"],
+  modules: ["@nuxt/eslint", "@nuxt/fonts", "shadcn-nuxt"],
   css: ["@/assets/css/tailwind.css"],
   shadcn: { prefix: "", componentDir: "./components/ui" },
-  image: {
-    format: ["webp"],
-    quality: 100,
-    domains: ["utfs.io"],
-  },
   vite: {
     plugins: [tailwindcss()],
   },

@@ -25,10 +25,7 @@
               v-if="value"
               class="flex justify-end md:justify-start items-center"
             >
-              <NuxtImg
-                :src="value"
-                class="w-full h-20 object-contain rounded-lg"
-              />
+              <img :src="value" class="w-full h-20 object-contain rounded-lg" />
             </div>
             <div v-else>
               <ImageIcon :size="100" />
@@ -93,7 +90,7 @@
     </div>
   </Dashboard>
   <Dialog v-model:open="open">
-    <DialogContent class="max-w-lg">
+    <DialogScrollContent class="max-w-lg">
       <DialogHeader>
         <DialogTitle>{{ editMode ? "Edit" : "Add" }} Category</DialogTitle>
       </DialogHeader>
@@ -111,7 +108,7 @@
           >
             <ImageIcon v-if="form.image === ''" :size="100" />
             <div v-else class="flex justify-center items-center">
-              <NuxtImg
+              <img
                 :src="form.image"
                 class="w-full max-h-60 object-contain drop-shadow-xl rounded-lg"
               />
@@ -126,7 +123,7 @@
           {{ editMode ? "Update" : "Create" }} category
         </Button>
       </DialogFooter>
-    </DialogContent>
+    </DialogScrollContent>
   </Dialog>
   <ImageModal v-model="form.image" v-model:open="imageModal" />
 </template>

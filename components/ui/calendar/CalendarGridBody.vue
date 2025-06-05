@@ -1,11 +1,14 @@
-<script lang="ts" setup>
-import { CalendarGridBody, type CalendarGridBodyProps } from 'reka-ui'
+<script setup>
+import { CalendarGridBody } from 'reka-ui';
 
-const props = defineProps<CalendarGridBodyProps>()
+const props = defineProps({
+  asChild: { type: Boolean, required: false },
+  as: { type: null, required: false },
+});
 </script>
 
 <template>
-  <CalendarGridBody v-bind="props">
+  <CalendarGridBody data-slot="calendar-grid-body" v-bind="props">
     <slot />
   </CalendarGridBody>
 </template>
